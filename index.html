@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2025 명사연 상하이 건축투어</title>
     
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS (CDN으로 로드) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- React & ReactDOM -->
+    <!-- React & ReactDOM (CDN으로 로드) -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     
-    <!-- Babel (JSX 변환용) -->
+    <!-- Babel (JSX를 JS로 변환) -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- 폰트 설정 -->
+    <!-- 폰트 설정 (Inter와 Noto Sans KR로 통일) -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+KR:wght@400;600;700&display=swap');
         body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background-color: #f8fafc; }
@@ -29,716 +29,982 @@
     <div id="root"></div>
 
     <script type="text/babel">
+        // JSX/React 코드가 Babel을 통해 실행됩니다.
         const { useState, useEffect } = React;
 
         // --- 아이콘 컴포넌트 (Lucide React 대체) ---
-        const IconMap = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></svg>;
-        const IconCalendar = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>;
-        const IconInfo = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>;
-        const IconChevronDown = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m6 9 6 6 6-6"/></svg>;
-        const IconBuilding = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M8 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M16 14h.01"/></svg>;
-        const IconUsers = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>;
-        const IconPhone = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>;
-        const IconMapPin = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>;
-        const IconNavigation = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>;
-        const IconStar = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>;
-        const IconBookOpen = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>;
-        const IconX = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M18 6 6 18"/><path d="m6 6 18 18"/></svg>;
-        const IconArrowLeft = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>;
-        const IconUserCheck = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>;
-        const IconFileText = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>;
-        const IconGraduationCap = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 10v6M2 10l10-5 10 5-10 5L2 10Z"/><path d="M12 15v8"/><path d="M7 21v-6"/><path d="M17 21v-6"/></svg>;
+        const IconCalendar = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${className}`}><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>;
+        const IconInfo = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${className}`}><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>;
+        const IconChevronDown = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${className}`}><path d="m6 9 6 6 6-6"/></svg>;
+        const IconBuilding = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${className}`}><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M8 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M16 14h.01"/></svg>;
+        const IconUsers = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${className}`}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>;
+        const IconPhone = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${className}`}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>;
+        const IconMapPin = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${className}`}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>;
+        const IconNavigation = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${className}`}><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>;
+        const IconStar = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${className}`}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>;
+        const IconBookOpen = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${className}`}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>;
+        const IconArrowLeft = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${className}`}><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>;
+        const IconUserCheck = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${className}`}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>;
+        const IconFileText = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${className}`}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>;
+        const IconGraduationCap = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${className}`}><path d="M22 10v6M2 10l10-5 10 5-10 5L2 10Z"/><path d="M12 15v8"/><path d="M7 21v-6"/><path d="M17 21v-6"/></svg>;
 
         // --- 데이터 ---
+
         const tourData = {
-            title: "2025 명사연 상하이 건축투어",
-            subtitle: "AAMU Round Table 2025",
-            date: "2025.11.27(목) - 11.30(일)",
-            days: [
+          title: "2025 명사연 상하이 건축투어",
+          subtitle: "AAMU Round Table 2025",
+          date: "2025.11.27(목) - 11.30(일)",
+          days: [
+            {
+              id: 1,
+              title: "Day 1",
+              theme: "과거와 미래의 조우",
+              area: "Suzhou & Hongqiao",
+              date: "11.27 (목)",
+              items: [
                 {
-                id: 1,
-                title: "Day 1",
-                theme: "과거와 미래의 조우",
-                area: "Suzhou & Hongqiao",
-                date: "11.27 (목)",
-                items: [
-                    { time: "09:00", title: "인천/김포 출발", type: "logistics", desc: "대한항공/동방항공/아시아나 개별 출발" },
-                    { time: "11:20", title: "상하이 푸동공항 집결", type: "meeting", desc: "전용 버스 탑승 및 이동" },
-                    {
-                    time: "14:00",
-                    title: "쑤저우 박물관",
-                    engTitle: "Suzhou Museum",
-                    architect: "I.M. Pei",
-                    caseTalker: "이종수",
-                    type: "visit",
-                    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Suzhou_Museum.jpg/800px-Suzhou_Museum.jpg",
-                    address: "204 Dongbei St, Gusu District, Suzhou, Jiangsu, China",
-                    details: "I.M. 페이가 '고향에 헌정하는 마지막 건축'. 전통 쑤저우 가옥의 지붕선과 현대적 기하학의 조화.",
-                    summary: `[개요]\n쑤저우 박물관은 2006년 세계적인 건축가 아이엠 페이(I.M. Pei)의 설계로 재개관한 공립 박물관입니다. 약 3만 점의 고대 예술품을 소장하고 있으며, 쑤저우 고성 인근 졸정원 옆에 위치하여 전통과 현대가 조화를 이루는 공간으로 주목받고 있습니다.\n\n[I.M. 페이의 마지막 헌정]\n1917년 쑤저우 명문가에서 태어난 페이는 고향에 남기는 이 마지막 작품을 통해 전통과 현대, 동양과 서양을 아우르는 건축 철학을 완성했습니다. "중국적이면서도 현대적인(Modern yet Chinese)" 건축을 목표로, 쑤저우 전통의 흰 회벽과 검은 기와를 현대적인 색채(회색 화강암)와 기하학적 형태로 재해석했습니다.`,
-                    pdfContent: `[I.M. 페이의 "고향에 헌정하는 마지막 건축"]\n중국 장쑤성 쑤저우는 상하이 북서쪽에 위치한 도시로, 아름다운 전통 원림과 깊은 역사성을 간직한 유적이 풍부한 곳이다. 도시 전역에는 물길을 따라 전통 마을인 고진이 이어지며, 이러한 수향 문화 덕분에 쑤저우는 흔히 '동양의 베네치아'로 불린다.\n2006년 전통 박물관 옆에 새롭게 완공된 쑤저우박물관(Suzhou Museum)은 약 15,000여 점의 전시 유물과 독창적인 건축 디자인으로 큰 주목을 받고 있다.\n\n[관람포인트]\n1. 형태 및 입면 디자인: 건물은 쑤저우 전통 가옥의 지붕선, 흑백 대비, 불규칙한 매스 형태를 현대적으로 재해석해 구성되었다.\n2. 평면 구성: 여러 동으로 나뉜 건물은 중정과 회랑을 통해 자연스럽게 연결되며 정원을 산책하는 듯한 동선을 만든다.\n3. 빛과 그림자의 연출: 천창과 측창을 활용한 자연채광 계획은 실내외 경계를 흐릿하게 만들며 시간대에 따라 공간 분위기를 변화시킨다.`
-                    },
-                    {
-                    time: "17:00",
-                    title: "저우좡 (주장)",
-                    engTitle: "Zhouzhuang Water Town",
-                    caseTalker: "최홍종",
-                    type: "visit",
-                    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Zhouzhuang_Twin_Bridges.jpg/800px-Zhouzhuang_Twin_Bridges.jpg",
-                    address: "Zhouzhuang, Kunshan, Suzhou, Jiangsu, China",
-                    details: "동양의 베니스. 900년 역사의 수향 마을과 명청시대 건축.",
-                    summary: `[동양의 베니스]\n저우좡은 '중국 제1의 수향(水鄕)'으로 불리는 곳으로, 베니스보다 300년 앞서 형성된 운하 도시입니다. 명·청 시대(1368-1911)에 지어진 고택들이 수로를 따라 보존되어 있습니다.\n\n[쌍교(雙橋)와 건축]\n저우좡의 상징인 쌍교(Twin Bridges)는 세덕교와 영안교가 직각으로 맞닿아 열쇠 모양을 하고 있어 '열쇠 다리'라고도 불립니다.`,
-                    pdfContent: `[개요]\n명·청시대인 1368-1911년 사이 수로와 주거지가 본격적으로 형성된 중국 제1의 수상도시.\n\n[Water Lanes & Stone Bridges]\n저우좡을 가로지르는 운하에는 많은 석교가 있는데, 그중 일부는 아주 오래되었습니다. \n1. 쌍교(雙橋): 세덕교와 영안교는 1573년에서 1619년 사이에 건설되었습니다. 각 다리에는 고대의 열쇠처럼 생긴 사각형과 원형 구멍이 하나씩 있습니다.\n2. 푸안교: 원나라 시대 인 1355년에 건설되었습니다. 네 모서리에 탑이 있고, 각 면에는 조각된 들보와 채색된 서까래가 있습니다.\n\n[건축적 사색: 최홍종 Case Talker]\n1. 첫 빛, 쌍교 위의 체험: 좁은 골목을 빠져나오자, 눈앞에 쌍교(双桥)가 나타났다. 흐릿하던 하늘이 갈라지며 햇살이 수면 위에 쏟아지고, 다리와 가옥은 그 순간 하나의 장면으로 응고되었다.\n2. 물길이 도시를 만든다: 저우좡은 양쯔강 하류와 대운하의 교차로에 자리하며, 수로망을 따라 성장했다. 길보다 물길이 도시를 규정한다.`
-                    },
-                    {
-                    time: "18:00",
-                    title: "스카이 소호",
-                    engTitle: "Sky SOHO",
-                    architect: "Zaha Hadid",
-                    caseTalker: "김동우",
-                    type: "visit",
-                    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Linkong_SOHO_2015.jpg/800px-Linkong_SOHO_2015.jpg",
-                    address: "968 Jinzhong Rd, Changning District, Shanghai, China",
-                    details: "12개의 건물이 16개의 스카이브릿지로 연결된 자하 하디드의 유기적 미래 도시.",
-                    summary: `[개요]\n상하이 훙차오 비즈니스 구역에 위치한 스카이 소호(Sky SOHO)는 자하 하디드의 SOHO 차이나 3부작 중 하나입니다. 12개의 독립된 건물이 16개의 공중 브릿지(Sky Bridge)로 연결되어 마치 거대한 리본이 춤추는 듯한 형상을 하고 있습니다.\n\n[디자인 철학: 유동적 연결]\n"건축은 고정된 덩어리가 아니라 유동적인 환경이어야 한다."\n자하 하디드의 철학대로 직선을 배제하고 유선형 알루미늄 패널과 유리를 사용하여 속도감과 미래지향적 이미지를 구현했습니다.`,
-                    pdfContent: `[개요]\n위치: 상하이 훙차오 비즈니스 구역 내 임공 경제원\n12개의 독립형 건물이 16개의 스카이 브리지로 연결되어 역동적이면서도 간결한 공간을 형성하는 인상적인 미래형 오피스 및 리테일 복합단지.\n\n[건축 디자인 개념]\nZaha Hadid의 디자인 철학은 Sky SOHO에 유기적 곡선, 유동적인 공간 구성, 그리고 전통과 현대의 융합이라는 형태로 강하게 반영되었다. Sky SOHO는 건물과 건물 사이의 '협곡' 형태 공간, 낮은 중정(중앙 안뜰), 완만한 경사와 동선의 곡선으로 방문자의 시선과 동선이 자연스럽게 연결되도록 설계하여 건축이 도시와 사용자의 '흐름'을 자연스럽게 받아들이도록 계획.`
-                    }
-                ]
+                  time: "09:00",
+                  title: "인천/김포 출발",
+                  type: "logistics",
+                  desc: "대한항공/동방항공/아시아나 개별 출발"
                 },
                 {
-                id: 2,
-                title: "Day 2",
-                theme: "예술과 재생의 서안(West Bund)",
-                area: "West Bund & Xintiandi",
-                date: "11.28 (금)",
-                items: [
-                    {
-                    time: "10:00",
-                    title: "롱 뮤지엄 웨스트 번드",
-                    engTitle: "Long Museum West Bund",
-                    architect: "Atelier Deshaus (Liu Yichun)",
-                    caseTalker: "이용석",
-                    type: "visit",
-                    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Long_Museum_West_Bund.jpg/800px-Long_Museum_West_Bund.jpg",
-                    address: "3398 Longteng Ave, Xuhui District, Shanghai, China",
-                    details: "1950년대 석탄 하역장의 변신. '우산형 볼트' 구조와 노출 콘크리트의 미학.",
-                    summary: `[산업 유산의 재해석]\n과거 석탄을 실어 나르던 부두의 하역 교량(Coal Hopper)을 철거하지 않고 그대로 보존하여 미술관의 진입 공간으로 활용했습니다.\n\n[우산형 볼트 (Umbrella Vault)]\n이 건물의 핵심은 노출 콘크리트로 만들어진 거대한 '우산형 볼트' 구조입니다. 캔틸레버 형식으로 뻗어 나온 이 구조물은 서로 독립적으로 서 있으면서도 시각적으로 연결되어 공간에 리듬감을 부여합니다.`,
-                    pdfContent: `[개요]\nLong Museum West Bund는 상하이 황푸강변 서안 문화 회랑의 중심에 위치한 현대미술관이다.\n\n[땅과 시간의 층위]\n이곳은 과거의 흔적 위에 세워진 시간의 층위를 잘 나타낸다. 1950년대 석탄을 실어 나르던 하역교량은 해체되지 않고 그대로 남아, 새로운 진입공간의 구조가 되었다.\n\n[우산형 볼트와 산업유산의 재해석]\n이 건축의 핵심은 구조가 공간의 리듬을 만든다는 점이다. '우산형 볼륨'이라 불리는 콘크리트 아치는 하중을 지탱하면서 동시에 전시실의 천장이 된다. 둥근 곡선과 수직 벽의 교차가 공간을 단조롭지 않게 만들고, 이동에 따라 빛의 패턴이 변한다.`
-                    },
-                    {
-                    time: "11:30",
-                    title: "웨스트 번드 아트센터",
-                    engTitle: "West Bund Art Center",
-                    architect: "Schmidt Hammer Lassen (Renovation)",
-                    caseTalker: "이황희",
-                    type: "visit",
-                    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/West_Bund_Art_%26_Design_2019.jpg/800px-West_Bund_Art_%26_Design_2019.jpg",
-                    address: "2555 Longteng Ave, Xuhui District, Shanghai, China",
-                    details: "항공기 제조 공장의 뼈대를 살려 만든 거대한 갤러리.",
-                    summary: `[항공 공장의 변신]\n본래 상하이 항공기 제조 공장의 격납고였던 건물을 리모델링했습니다. 거대한 철골 트러스 구조와 높은 층고를 그대로 살려 대형 설치 미술이나 아트 페어를 수용할 수 있는 압도적인 공간감을 제공합니다.`,
-                    pdfContent: `[과거: Shanghai Aircraft Manufacturing Factory]\n재개발 전 이 부지는 거대한 금속 프레임 공장이었다. 1950~70년대 중국 항공 산업의 전형적인 붉은 벽돌과 강철 트러스 구조를 가졌으며, 공장 지붕은 톱니형(saw-tooth) 형태가 많았다.\n\n[현재: 웨스트 번드 아트센터의 재현]\nDavid Chipperfield의 설계 철학과 상하이 도시계획 변화에 따라 산업시설은 철거되거나 재해석되었다. 기존 공장 건물 대부분은 철거되었으나 일부 구조물은 현장 경험을 정제하여 재해석하는 방식으로 반영되었다.`
-                    },
-                    {
-                    time: "14:00",
-                    title: "더 루프",
-                    engTitle: "The Roof",
-                    architect: "Jean Nouvel",
-                    caseTalker: "김혜진",
-                    type: "visit",
-                    image: "https://images.unsplash.com/photo-1505577037969-27897967755a?q=80&w=800&auto=format&fit=crop",
-                    address: "458 Madang Rd, Huangpu District, Shanghai, China",
-                    details: "신천지의 붉은 벽돌과 대조되는 '살아있는 파사드'. 식물로 뒤덮인 붉은 건축물.",
-                    summary: `[도심 속의 작은 도시]\n장 누벨(Jean Nouvel)은 상하이의 전통 주거 양식인 릴롱(골목길)을 현대 상업 공간에 접목했습니다. 건물 전체를 감싸는 붉은색은 인근 신천지의 벽돌 색감과 조화를 이루면서도 강렬한 존재감을 드러냅니다.\n\n[살아있는 파사드]\n조경 스튜디오 ASPECT와 협업하여 수천 개의 화분으로 파사드를 덮었습니다.`,
-                    pdfContent: `[개요]\n상하이 신천지(Xintiandi) 일대는 19세기 릴롱(Lilong) 주거지에서 21세기 상업복합지로 변모하는 대표적 도시재생 구역임.\n\n[장 누벨의 설계장치]\n1. 빛의 조율: 상하이의 직사광, 습윤 기후에 맞춘 '반투명 캐노피', '수목필터', '적색 파사드 반사광'의 삼중 필터링 체계.\n2. 경계의 중간: 릴롱 골목의 'semi-outdoor' 감각을 2-3층 회랑의 반외부 통로로 재현.\n3. 프레임과 시선: 각 회랑 벽면의 루버와 플랜터 박스가 시선을 수평방향으로 유도함.`
-                    },
-                    {
-                    time: "16:00",
-                    title: "1000 트리즈",
-                    engTitle: "1000 Trees",
-                    architect: "Heatherwick Studio",
-                    caseTalker: "정장환",
-                    type: "visit",
-                    image: "https://images.unsplash.com/photo-1641628092773-74255f6337a7?auto=format&fit=crop&w=800&q=80",
-                    address: "600 Moganshan Rd, Putuo District, Shanghai, China",
-                    details: "현대판 바빌론의 공중정원. 1,000개의 구조 기둥 위에 나무를 심은 파격적 디자인.",
-                    summary: `[구조가 곧 장식이다]\n토마스 헤더윅은 건물을 지탱하는 기둥을 숨기지 않고 오히려 밖으로 드러내어 화분으로 만들었습니다. 1,000개의 콘크리트 기둥 머리마다 나무가 심어져 있어, 멀리서 보면 거대한 산이나 숲처럼 보입니다.`,
-                    pdfContent: `[도심속의 자연 + 공중정원]\n2011년부터 헤더윅 스튜디오에서 진행되었던 ‘1000그루 나무(1000 Trees)’는 상하이 예술 단지 모간산루 50번지(M50)에서 20분 거리에 위치한 6헥타르 부지에 설계된 복합 개발 시설이다. 이 건물에서 가장 두드러지는 구조는 나무 모양으로 형상화된 1,000개의 기둥이다.\n\n[Design Inspiration]\n헤더윅 스튜디오는 인간과 자연이 단절된 공간이 아닌, 서로 교감하고 공존하는 공간으로 조성하여 자연과 도시를 연결하고 자연과 건축물의 융합을 통해 사람들에게 새로운 경험을 제공한다. 바빌론의 공중정원을 모티브로 디자인 하였다고 한다.`
-                    },
-                    {
-                    time: "18:00",
-                    title: "신천지",
-                    engTitle: "Xintiandi",
-                    caseTalker: "-",
-                    type: "walk",
-                    address: "Xintiandi, Huangpu District, Shanghai, China",
-                    details: "석고문(Shikumen) 양식을 보존한 상하이 도시재생의 효시."
-                    }
-                ]
+                  time: "11:20",
+                  title: "상하이 푸동공항 집결",
+                  type: "meeting",
+                  desc: "전용 버스 탑승 및 이동"
                 },
                 {
-                id: 3,
-                title: "Day 3",
-                theme: "재료의 물성과 빛",
-                area: "Hongkou & Lujiazui",
-                date: "11.29 (토)",
-                items: [
-                    {
-                    time: "10:00",
-                    title: "1933 라오장팡",
-                    engTitle: "1933 Old Millfun",
-                    architect: "Balfours",
-                    caseTalker: "김재윤",
-                    type: "visit",
-                    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/1933_Old_Millfun.jpg/800px-1933_Old_Millfun.jpg",
-                    address: "10 Shajing Rd, Hongkou District, Shanghai, China",
-                    details: "옛 도축장의 기묘한 변신. 미로 같은 콘크리트 동선과 빛의 대비.",
-                    summary: `[고딕 아르데코와 브루탈리즘]\n1933년 영국 건축가 발푸어가 설계한 이 건물은 원래 동아시아 최대 규모의 도축장이었습니다. 장식 없는 콘크리트의 육중함(브루탈리즘)과 기하학적 아름다움(아르데코)이 기묘하게 결합되어 있습니다.\n\n[기능주의의 미학]\n복잡하게 얽힌 내부 동선은 사실 철저한 기능주의의 산물입니다. 가축이 이동하는 길(우도)은 미끄러지지 않도록 거칠게 마감되었고, 사람의 길과 철저히 분리되어 있습니다.`,
-                    pdfContent: `[리모델링을 통한 복합예술공간]\n기존 상하이 도살장(Shanghai Slaughter house)였으나 리노베이션 되면서 Old Millfun으로 개명.\n\n[건축적 특징]\n1. 미로 같은 동선: 내부 통로가 미로처럼 얽혀 있어 공간이 분설되면서도 연결됨.\n2. 판옵티콘 구조: 중심 감시탑에서 전체 공간을 감찰할 수 있게 설계되어, 각각의 구역과 통로가 한 눈에 들어옴.\n3. 빛과 통풍: 두꺼운 벽면과 큰 창, 다양한 구조적 개방부를 통해 자연광이 건물 내부 깊숙이 들어오며, 자연 환기 역시 용이함.`
-                    },
-                    {
-                    time: "11:30",
-                    title: "오로라 뮤지엄",
-                    engTitle: "Aurora Museum",
-                    architect: "Tadao Ando (Renovation)",
-                    caseTalker: "이용석",
-                    type: "visit",
-                    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Aurora_Plaza_Shanghai.jpg/800px-Aurora_Plaza_Shanghai.jpg",
-                    address: "99 Fucheng Rd, Lujiazui, Pudong, Shanghai, China",
-                    details: "안도 다다오의 중국 내 첫 리노베이션. '빛'과 '기하학'의 정수.",
-                    summary: `[보석 상자]\n황푸강변의 기존 오피스 빌딩을 안도 다다오가 박물관으로 개조했습니다. 외관은 유리 커튼월로 마감하여 밤이 되면 스스로 빛나는 '푸른 보석 상자'처럼 보입니다.\n\n[공간의 드라마]\n내부에는 안도 특유의 노출 콘크리트와 기하학적 질서가 지배합니다. 핵심 공간인 나선형 계단은 천창에서 쏟아지는 빛을 받으며 관람객을 상층부로 이끕니다.`,
-                    pdfContent: `[빛의 건축: 자연광과 명상의 공간]\nAurora Museum은 '빛'이라는 안도 다다오의 건축 언어가 가장 집약적으로 드러나는 공간입니다.\n\n[개요]\nAurora Museum은 기존 상업 건물(오피스)의 일부를 리모델링하여 박물관으로 탈바꿈한 공간입니다. 안도 다다오가 중국에서 처음으로 수행한 리노베이션 작업으로, 그의 대표적인 건축 철학인 '빛의 명상적 활용'이 잘 드러납니다.\n\n[경험의 흐름: 나선형 동선과 전시의 시퀀스]\n안도는 박물관 관람을 단순한 시각적 활동이 아닌, 신체적 동선과 감성적 흐름이 결합된 체험으로 구성하고자 하였습니다. 중앙의 나선형 계단은 단순한 이동 통로를 넘어 관람 여정의 핵심 구조물로 기능합니다.`
-                    },
-                    {
-                    time: "14:00",
-                    title: "루자쭈이 전시 센터",
-                    engTitle: "Lujiazui Exhibition Center",
-                    architect: "OMA",
-                    caseTalker: "배천문",
-                    type: "visit",
-                    image: "https://images.unsplash.com/photo-1538428494232-9c0d8d3a50f6?q=80&w=800&auto=format&fit=crop",
-                    address: "30 Yincheng Middle Rd, Pudong, Shanghai, China",
-                    details: "옛 선박의 요람 위에 매달린 '공간적 틀(Spatial Framework)'.",
-                    summary: `[산업 유산과 OMA]\nOMA는 옛 상하이 조선소의 선박 건조대(경사로) 부지에 새로운 전시 센터를 설계했습니다. 건물을 광장 위에 띄워 올림으로써(Cantilever), 하부의 경사로 공간을 대규모 이벤트나 야외 극장으로 활용할 수 있게 만들었습니다.`,
-                    pdfContent: `[개요]\n루자쭈이 하버 시티 전시 센터는 상하이 푸둥의 가장 최근 개발 지역인 황푸 강변에 위치해 있으며, 옛 '상하이 조선소' 부지에 자리 잡은 이 프로젝트 부지는 오랜 조선 산업의 역사를 자랑한다.\n\n[건축 디자인]\n건물의 물질성과 건축 양식은 이 부지의 산업적 과거와 소통을 형성한다. 금속 망사로 싸인 신비한 물체가 강철 구조를 드러내고, 이 부지에 있던 미완성 선박 선체를 연상시킵니다. 설계자 OMA는 전시 센터를 광장 위에 매달아 경사로 아래 다른 전시 공간과 연결되는 "공간적 틀"로 구상했다.`
-                    },
-                    {
-                    time: "15:30",
-                    title: "상하이 심포니 홀",
-                    engTitle: "Shanghai Symphony Hall",
-                    architect: "Arata Isozaki",
-                    caseTalker: "성기엽",
-                    type: "visit",
-                    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Shanghai_Symphony_Hall.jpg/800px-Shanghai_Symphony_Hall.jpg",
-                    address: "1380 Fuxing Middle Rd, Xuhui District, Shanghai, China",
-                    details: "음향을 위한 완벽한 'Box-in-Box' 구조와 물결치는 지붕.",
-                    summary: `[소리를 위한 건축]\n아라타 이소자키는 지하철 소음과 진동을 차단하기 위해 건물 전체를 스프링 위에 띄우는 '플로팅 구조(Box-in-Box)'를 적용했습니다.\n\n[형태와 재료]\n대나무를 엮은 듯한 테라코타 벽돌 외관은 상하이의 전통적인 질감을 현대적으로 표현했습니다.`,
-                    pdfContent: `[상하이 심포니 홀의 특징]\n1. "두 개의 볼륨(BOX-IN-BOX)" – 음향을 위한 이중 구조: 내부 콘서트홀과 18m 높이의 외부 보호 쉘(skin)이 분리되어 있고, 사이에 진동을 차단하는 완충층이 존재한다.\n2. 도시와 건물 사이의 완충적 광장: 약 100m길이의 녹지가 있는 건물 앞 야외광장은 도시와 심포니홀 사이의 '전이 공간'으로 작동한다.\n3. 음악을 '움직임'으로 읽는 공간: 내부 홀 천장과 측벽의 곡선은 음향 반사와 잔향 제어라는 실용적 목적과 동시에 소리의 흐름을 시각화한 조형적 장치 역할을 한다.`
-                    },
-                    {
-                    time: "17:00",
-                    title: "티엔즈팡 & 와이탄 야경",
-                    type: "walk",
-                    caseTalker: "최홍종",
-                    address: "Tianzifang, Huangpu District, Shanghai, China",
-                    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Tianzifang_Shanghai.jpg/800px-Tianzifang_Shanghai.jpg",
-                    details: "예술 거리 산책 및 황푸강 야경 감상"
-                    }
-                ]
+                  time: "14:00",
+                  title: "쑤저우 박물관",
+                  engTitle: "Suzhou Museum",
+                  architect: "I.M. Pei",
+                  caseTalker: "이종수",
+                  type: "visit",
+                  image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Suzhou_Museum.jpg/800px-Suzhou_Museum.jpg",
+                  address: "204 Dongbei St, Gusu District, Suzhou, Jiangsu, China",
+                  details: "I.M. 페이가 '고향에 헌정하는 마지막 건축'. 전통 쑤저우 가옥의 지붕선과 현대적 기하학의 조화.",
+                  summary: `[개요]
+쑤저우 박물관은 2006년 세계적인 건축가 아이엠 페이(I.M. Pei)의 설계로 재개관한 공립 박물관입니다. 약 3만 점의 고대 예술품을 소장하고 있으며, 쑤저우 고성 인근 졸정원 옆에 위치하여 전통과 현대가 조화를 이루는 공간으로 주목받고 있습니다.
+
+[I.M. 페이의 마지막 헌정]
+1917년 쑤저우 명문가에서 태어난 페이는 고향에 남기는 이 마지막 작품을 통해 전통과 현대, 동양과 서양을 아우르는 건축 철학을 완성했습니다. "중국적이면서도 현대적인(Modern yet Chinese)" 건축을 목표로, 쑤저우 전통의 흰 회벽과 검은 기와를 현대적인 색채(회색 화강암)와 기하학적 형태로 재해석했습니다.
+
+[디자인 포인트]
+1. 형태 및 입면: 전통 가옥의 흑백 대비와 지붕선을 현대적 어휘로 변환했습니다.
+2. 평면 구성: 중정과 회랑이 연결되는 전통 사합원 구조를 차용하여 관람자가 정원을 산책하듯 이동하게 합니다.
+3. 빛의 연출: 독특한 육각형 창과 루버를 통해 자연광을 부드럽게 여과시켜 내부로 끌어들입니다.`,
+                  pdfContent: `[I.M. 페이의 "고향에 헌정하는 마지막 건축"]
+중국 장쑤성 쑤저우는 상하이 북서쪽에 위치한 도시로, 아름다운 전통 원림과 깊은 역사성을 간직한 유적이 풍부한 곳이다. 도시 전역에는 물길을 따라 전통 마을인 고진이 이어지며, 이러한 수향 문화 덕분에 쑤저우는 흔히 '동양의 베네치아'로 불린다.
+
+2006년 전통 박물관 옆에 새롭게 완공된 쑤저우박물관(Suzhou Museum)은 약 15,000여 점의 전시 유물과 독창적인 건축 디자인으로 큰 주목을 받고 있다. 박물관은 세계문화유산인 졸정원을 비롯해 사자림, 쑤저우 고유의 원림, 전통 거리, 전통 주거 건축과 유기적으로 연결되어 있어, 도시의 역사적 맥락과 조화를 이루는 대표적 건축 사례로 평가된다.
+
+이 박물관의 설계자는 세계적인 건축가 I.M. 페이다. 그는 1917년 상하이에서 태어나 어린 시절을 쑤저우의 사자림에서 보내며 자랐다. 19세에 미국으로 유학을 떠나 MIT와 하버드에서 건축을 전공한 후 뉴욕에 정착해 세계적인 활동을 펼쳤다.
+
+그는 고향 쑤저우에 남긴 이 마지막 작품을 통해 전통과 현대, 동양과 서양, 지역성과 세계성을 아우르는 건축적 철학을 완성했다. 2019년 5월 향년 98세로 별세한 이후, 쑤저우박물관은 그가 남긴 중요한 유작이자 건축적 유산으로 자리하고 있다.
+
+[관람포인트]
+1. 형태 및 입면 디자인
+건물은 쑤저우 전통 가옥의 지붕선, 흑백 대비, 불규칙한 매스 형태를 현대적으로 재해석해 구성되었다. 기와 형태의 지붕과 사선 박공지붕은 전통적 이미지와 현대적 건축 언어를 동시에 보여준다.
+
+2. 평면 구성
+여러 동으로 나뉜 건물은 중정과 회랑을 통해 자연스럽게 연결되며 정원을 산책하는 듯한 동선을 만든다. 이를 통해 관람자는 실내와 외부 정원을 자연스럽게 오가면서 작품과 풍경을 함께 즐길 수 있다.
+
+3. 빛과 그림자의 연출
+천창과 측창을 활용한 자연채광 계획은 실내외 경계를 흐릿하게 만들며 시간대에 따라 공간 분위기를 변화시킨다. 은은한 간접광은 전시 감상에 적절한 조도를 제공한다.
+
+4. 자연과의 관계
+박물관 곳곳에 배치된 연못, 대나무, 중정은 건물 전체를 하나의 정원처럼 느끼게 한다. 다양한 창을 통해 외부 풍경이 실내로 유입되며, 실내외를 넘나드는 시각적 연속성이 강조된다.
+
+5. 재료적 특성
+전통 쑤저우 건축 재료를 현대적으로 해석해, 흰색 석회벽과 회색 슬레이트 지붕으로 지역적 정체성과 절제된 미감을 강조했다. 유리와 금속프레임을 사용해 내부 투명성과 개방감을 확보하며 전통 재료와 균형을 이루었다.
+
+[도시적 맥락]
+박물관은 19세기 충왕궁과 16세기 명대 졸정원 사이에 위치하며, 졸정원은 중국 4대 정원으로 유네스코 세계문화유산에 등재된 쑤저우의 대표적 조경 미학을 상징한다. I.M. Pei는 두 역사적 유산의 맥락을 존중해 박물관을 그 사이의 문화적 연결축으로 배치했다. 충왕궁의 사합원식 구조는 박물관의 평면 구성에 반영되어 전통적 질서를 유지하고, 북측 졸정원과는 시각·조경적 연계를 통해 정원의 연속성을 확장했다. 그 결과 박물관은 과거의 정원과 저택, 그리고 현대 건축이 자연스럽게 만나는 도시적 매개 공간으로 기능하며, 역사와 현대의 조화로운 공존을 구현하고 있다.
+
+[평면적 특성]
+사합원은 중국 전통 건축의 대표적 주거 유형으로, 동·서·남·북의 건물이 하나의 중정을 중심으로 둘러싸는 배치를 말한다. Pei는 이를 박물관 설계에 현대적으로 변용하여 공간적 안정감과 명확한 조직성을 구현하였다. 중정은 쑤저우 박물관의 핵심 공간으로, 외부 자연과 실내 전시 공간을 매개하는 중요한 역할을 한다.`
                 },
                 {
-                id: 4,
-                title: "Day 4",
-                theme: "도시의 기록과 귀환",
-                area: "Pudong & Airport",
-                date: "11.30 (일)",
-                items: [
-                    {
-                    time: "09:30",
-                    title: "상하이 도시계획 전람관",
-                    type: "visit",
-                    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Shanghai_Urban_Planning_Exhibition_Center.jpg/800px-Shanghai_Urban_Planning_Exhibition_Center.jpg",
-                    address: "100 Renmin Da Dao, Huangpu District, Shanghai, China",
-                    desc: "상하이의 과거, 현재, 미래 도시 계획 조망"
-                    },
-                    {
-                    time: "11:00",
-                    title: "푸동지구 마천루",
-                    type: "view",
-                    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Shanghai_skyline_2019.jpg/800px-Shanghai_skyline_2019.jpg",
-                    address: "Lujiazui, Pudong, Shanghai, China",
-                    desc: "상하이 타워, SWFC, 진마오 타워 등 초고층 빌딩군 조망 및 자유 시간"
-                    },
-                    {
-                    time: "13:00",
-                    title: "푸동 공항 이동",
-                    type: "logistics",
-                    desc: "귀국편 탑승 수속"
-                    }
-                ]
+                  time: "17:00",
+                  title: "저우좡 (주장)",
+                  engTitle: "Zhouzhuang Water Town",
+                  caseTalker: "최홍종",
+                  type: "visit",
+                  image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Zhouzhuang_Twin_Bridges.jpg/800px-Zhouzhuang_Twin_Bridges.jpg",
+                  address: "Zhouzhuang, Kunshan, Suzhou, Jiangsu, China",
+                  details: "동양의 베니스. 900년 역사의 수향 마을과 명청시대 건축.",
+                  summary: `[동양의 베니스]
+저우좡은 '중국 제1의 수향(水鄕)'으로 불리는 곳으로, 베니스보다 300년 앞서 형성된 운하 도시입니다. 명·청 시대(1368-1911)에 지어진 고택들이 수로를 따라 보존되어 있습니다.
+
+[쌍교(雙橋)와 건축]
+저우좡의 상징인 쌍교(Twin Bridges)는 세덕교와 영안교가 직각으로 맞닿아 열쇠 모양을 하고 있어 '열쇠 다리'라고도 불립니다.
+이곳의 건축은 '전면은 강을, 후면은 거리'를 향하는 이중 입면 구조가 특징입니다. 검은 기와와 흰 벽이 물에 반사되는 풍경은 건축과 자연이 하나가 되는 경지를 보여줍니다.`,
+                  pdfContent: `[개요]
+명·청시대인 1368-1911년 사이 수로와 주거지가 본격적으로 형성된 중국 제1의 수상도시, 베니스 보다 300년 전에 형성된 수상도시로 운하를 기초로 형성된 마을로 동양의 베니스라 불리며, 중국 제1의 수상도시이자 국가급 관광지로 지정됨.
+춘추시대에는 오왕(吳王)의 영지였고, 원나라 시기에 승려 주디공이 토지를 기증하여 '저우좡'이라는 이름 유래.
+
+[Water Lanes & Stone Bridges]
+저우좡을 가로지르는 운하에는 많은 석교가 있는데, 그중 일부는 아주 오래되었습니다. 그중 약 14개는 약 150년 전, 혹은 그보다 더 전인 제국 시대에 건설되었습니다.
+
+1. 쌍교(雙橋): 세덕교와 영안교는 1573년에서 1619년 사이에 건설되었습니다. 각 다리에는 고대의 열쇠처럼 생긴 사각형과 원형 구멍이 하나씩 있습니다. 이 다리는 '열쇠다리'라고도 불립니다.
+2. 푸안교: 원나라 시대 인 1355년에 건설되었습니다. 네 모서리에 탑이 있고, 각 면에는 조각된 들보와 채색된 서까래가 있습니다. 사람들은 탑에서 현지 음식과 쇼핑을 즐깁니다.
+3. 진풍교: 중석강 하구에 있습니다. 명나라와 청나라 시대에 건설되어 오늘날까지 잘 보존되어 있으며, 네 모서리에 모두 탑이 있습니다.
+
+[Old Buildings]
+이 중세 수향 마을은 900년 이상의 역사를 가지고 있으며, 명나라와 청나라 시대에 지어진 집과 다리가 있습니다. 저우좡에는 약 1,000가구가 명·청 시대와 중화민국 초기에 지어진 오래된 주거지에 살고 있습니다. 주택의 약 절반이 잘 보존되어 있으며 100여 채의 집에는 안뜰이 있습니다.
+- 심씨 저택: 1742년 건축. 7개의 안뜰과 5개의 아치형 입구, 100개가 넘는 방.
+- 장가(张家): 1436-1449년 건축. 6개의 안뜰과 70개가 넘는 방. 정사각형 연못 보유.
+- 예추창의 저택: 시인이자 정치가 예추창의 저택. 5개의 안뜰 구조.
+
+[건축적 사색: 최홍종 Case Talker]
+1. 첫 빛, 쌍교 위의 체험
+좁은 골목을 빠져나오자, 눈앞에 쌍교(双桥)가 나타났다. 흐릿하던 하늘이 갈라지며 햇살이 수면 위에 쏟아지고, 다리와 가옥은 그 순간 하나의 장면으로 응고되었다. 나는 건축가로서 그 순간을 오래 기억할 것임을 직감했다. 건축이라는 공통의 언어를 오래 공유한 이들끼리는, 서로 눈빛을 마주치지 않아도 통한다.
+
+2. 물길이 도시를 만든다
+저우좡은 양쯔강 하류와 대운하의 교차로에 자리하며, 수로망을 따라 성장했다. 길이 도시를 만들었던 북방과 달리, 여기서는 물길이 도시를 규정한다. 배가 곧 교통수단이고, 다리가 곧 도시의 결절점이다. 저우좡의 건축은 이 수로를 전제하지 않고서는 설명할 수 없다. 집의 앞면이 물을 향하고, 뒷면이 골목으로 이어지는 **이중 입면(double frontage)**은 수향 건축의 핵심 질서다.
+
+3. 목재와 벽돌, 혼합의 미학
+남방 주거는 기후와 환경에 적응하며 목조와 조적을 결합한 구조로 진화했다. 명·청 시기 이후 벽돌 기단 위에 목조 상부를 얹는 방식이 정착했고, 고온다습한 기후를 견디기 위해 통풍구조와 높은 기단이 필수였다. 검은 기와와 흰 벽은 강물에 반사되며, 풍경은 건축의 일부가 된다. 건축과 자연이 분리되지 않고, 하나의 장면 속에 공존한다.
+
+4. 중정(中庭)의 변주 ― 북경 사합원과의 대화
+중국 건축의 상징인 중정(中庭)은 지역에 따라 다르게 해석된다.
+•북경 사합원: 사방을 둘러싼 폐쇄적 구조, 방어적 공간. 위계와 질서가 강조된다.
+•저우좡 주거: 수로와 맞닿은 개방적 마루, 내정은 작지만 외부로 열려 있다. 마을 전체가 거대한 '열린 중정'처럼 기능한다.
+닫힌 중정과 열린 마루. 이 대비는 단순한 형태 차이가 아니라, 자연환경과 사회 구조의 차이를 반영한다. 저우좡은 물과 더불어 살아가는 남방인의 철학을 건축으로 보여준다.
+
+5. 다리와 골목 ― 공동체의 무대
+저우좡의 다리는 단순한 구조물이 아니라 공동체의 무대다. 물길과 골목을 이어주는 다리 위에서 사람들은 만나고, 소식을 나누고, 장터가 열리기도 했다. 각각의 다리는 도시의 기억을 담은 상징이다. 이 다리들이 모여 마을을 하나로 묶어주며, 저우좡은 "물과 다리의 건축 도시"로 완성되었다.
+
+6. 동아시아 건축으로 퍼진 흔적
+저우좡의 건축은 국경 안에 머물지 않았다.
+•한국: 강릉, 통영 등 수변 어촌 마을의 대청마루는 저우좡식 수변 개방 구조와 닮아 있다.
+•일본: 교토·오사카의 마치야(町屋)는 가로로 길게 뻗은 평면과 도로·수로를 동시에 고려한 입면에서 저우좡의 흔적을 떠올리게 한다.
+이는 단순한 유사성이 아니라, 공통된 자연환경과 생활양식이 빚어낸 지역 건축의 교류였다. 저우좡은 동아시아 수변 주거 건축의 원형이자 모태였다고 할 수 있다.
+
+7. 관광과 보존, 그리고 생명의 연속
+오늘날 저우좡은 세계적 관광지가 되었지만, 그만큼 전통성은 위기를 맞고 있다. 상업화는 원주민을 내몰고, 집은 기념품 가게로 변해간다. 그러나 보존은 단순히 외형을 동결하는 것이 아니다. 보존은 생명의 연속이다.
+
+8. 건축의 질문 ― 도시와 건축, 어느 쪽이 먼저인가
+쌍교 위에 서서 나는 스스로에게 물었다. "건축이 도시를 만드는가, 도시가 건축을 빚는가." 저우좡에서 그 답은 명확하다. 도시가 건축을 빚는다. 수로가 집을 규정했고, 다리가 공동체를 만들었으며, 건축은 도시의 일부로만 존재할 수 있었다.
+
+9. 맺으며 ― 현재 속의 과거, 과거 속의 현재
+저우좡은 과거의 박제가 아니라 현재의 생명이다. 수로 위를 비추는 햇살 속에서, 나는 건축이 단순히 짓는 행위가 아니라 자연과 사회, 시간과 공동체를 연결하는 매개임을 새삼 느꼈다. 상하이의 마천루 숲을 지나 이 마을에 들어오면, 마치 다른 시간에 발을 딛는 듯하다. 그러나 그것은 회귀가 아니라 깨달음이다.`
+                },
+                {
+                  time: "18:00",
+                  title: "스카이 소호",
+                  engTitle: "Sky SOHO",
+                  architect: "Zaha Hadid",
+                  caseTalker: "김동우",
+                  type: "visit",
+                  image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Linkong_SOHO_2015.jpg/800px-Linkong_SOHO_2015.jpg",
+                  address: "968 Jinzhong Rd, Changning District, Shanghai, China",
+                  details: "12개의 건물이 16개의 스카이브릿지로 연결된 자하 하디드의 유기적 미래 도시.",
+                  summary: `[개요]
+상하이 훙차오 비즈니스 구역에 위치한 스카이 소호(Sky SOHO)는 자하 하디드의 SOHO 차이나 3부작 중 하나입니다. 12개의 독립된 건물이 16개의 공중 브릿지(Sky Bridge)로 연결되어 마치 거대한 리본이 춤추는 듯한 형상을 하고 있습니다.
+
+[디자인 철학: 유동적 연결]
+"건축은 고정된 덩어리가 아니라 유동적인 환경이어야 한다."
+자하 하디드의 철학대로 직선을 배제하고 유선형 알루미늄 패널과 유리를 사용하여 속도감과 미래지향적 이미지를 구현했습니다.
+
+[관람 포인트]
+1. 협곡(Canyon): 건물 하부에 조성된 선큰 가든(Sunken Garden)은 마치 자연 협곡처럼 연출되어 지하 공간에 빛과 활력을 불어넣습니다.
+2. 스카이 브릿지: 건물 간을 연결하는 브릿지를 통해 단절 없는 연속적인 공간 경험을 제공합니다.
+3. 고속열차 모티브: 4개의 긴 볼륨은 마치 출발을 앞둔 고속열차처럼 역동적으로 배치되어 있습니다.`,
+                  pdfContent: `[개요]
+위치: 상하이 훙차오 비즈니스 구역 내 임공 경제원 (Lingkong Economic Park)
+전체 부지는 약 86,000㎡, 연면적은 약 342,500 ~ 350,000㎡에 이르며, 11층 규모의 오피스(196,000㎡)와 리테일 공간(23,000㎡)이 결합된 구조. 12개의 독립형 건물이 16개의 스카이 브리지로 연결되어 역동적이면서도 간결한 공간을 형성하는 인상적인 미래형 오피스 및 리테일 복합단지. 800개가 넘는 기업의 본사가 자리 잡고 있으며 유기적인 곡선과 미래지향적 형태가 특징.
+
+[건축 디자인 개념]
+Zaha Hadid의 디자인 철학은 Sky SOHO에 유기적 곡선, 유동적인 공간 구성, 그리고 전통과 현대의 융합이라는 형태로 강하게 반영되었다. "건축은 고정된 덩어리가 아니라 연속적이고 상호작용하는 유동적인 환경이어야 한다"는 생각에 기반한 이 철학은 Sky SOHO 전체에 적용되어, 각 동이 곡선 형태로 유려하게 배치되고 스카이브릿지로 연결됨으로써, 모서리와 직선을 최소화한 유기적 흐름을 느끼게 계획됨.
+
+Sky SOHO는 건물과 건물 사이의 '협곡' 형태 공간, 낮은 중정(중앙 안뜰), 완만한 경사와 동선의 곡선으로 방문자의 시선과 동선이 자연스럽게 연결되도록 설계하여 건축이 도시와 사용자의 '흐름'을 자연스럽게 받아들이도록 계획. 이러한 방식은 중국 전통의 중정 개념, 자연환경의 유동적 질서, 미래지향적 도시 이미지를 결합한 대표적 예.
+
+Zaha Hadid의 "곡선의 미학", "직선의 해체", "형식적 유연성"이라는 디자인 언어는 Sky SOHO의 매끄러운 알루미늄 패널과 대형 유리 파사드, 그리고 내부 공간의 연속성에서도 볼 수 있으며, 이는 단순한 형태적 실험을 넘어 건축물 자체가 하나의 유기적 풍경이 되도록 계획됨.
+
+[설계 상세]
+스카이 SOHO는 자하 하디드 건축이 설계한 베이징의 갤럭시 SOHO와 왕징 SOHO에 이어 SOHO 차이나 3부작의 세 번째 건물이다. 12개의 건물블록으로 구성된 4개의 긴 볼륨을 가진 상부 건물은 연속적인 곡선형태로 디자인 되어있으며, 비선형적으로 배치된 4개의 건물은 출발을 앞둔 고속열차처럼 보인다.
+
+총 16개의 브릿지가 건물 블록들 사이를 연결하며 입체적인 동선을 형성합니다. 이 브릿지들은 단순한 통로를 넘어, 각 건물의 중정 (Courtyard)을 조망하는 드라마틱한 시퀀스를 제공하는 건축적 요소로 기능한다.
+
+건물 아래 협곡처럼 형성된 7,000m² 규모의 선큰 가든(Sunken Garden)은 공공 공간과 상업 시설이 혼합된 형태로, 지하층까지 자연광을 효과적으로 끌어들여 폐쇄적인 지하 공간에 개방감과 활력을 부여하며, 도시 보행 동선을 건물 내부로 자연스럽게 유입시킨다. 특정 각도에서 바라보면, 선큰 가든 위로 최대 40미터 높이까지 솟아 있는 상부의 건물들이 마치 자연 협곡같이 우뚝 솟은 벽과 같이 느껴진다.
+
+저층부 상업 시설은 상부 건물 매스들을 감싸는 유려한 곡선 형태의 포디움으로 디자인되어, 단지 전체의 통일감을 조성하며, 포디움 내부 공간은 외관의 곡선 형태를 그대로 반영하여, 벽, 바닥, 천장의 경계가 모호해지는 듯한 연속적인 시각 경험을 제공하며, 사용자들의 이동을 유도한다.
+
+[답사포인트]
+1. 동선 및 브릿지: 건물 간을 연결하는 브릿지를 직접 걸어보며 자하 하디드가 의도한 연속적인 동선과 공간의 흐름, 그리고 협곡처럼 느껴지는 선큰가든으로 내려가 건물하부공간을 체험해 보세요.
+2. 곡선 형태와 재료: 건물의 외피를 가까이에서 관찰하며 비정형 곡선이 실제로 어떻게 구현되었는지 (예: 유닛 커튼월, 알루미늄 패널 처리 등), 그리고 유기적인 형태와 무기물적인 재료(유리, 금속)의 대비를 느껴보세요.
+3. 내부 공용 공간: 로비나 리테일 포디움의 내부 공간이 외관의 곡선 형태와 어떻게 통일된 언어로 이어지는지, 그리고 공간의 경계가 모호해지는 경험을 중점적으로 관찰해 보세요.`
                 }
-            ],
-            participants: [
-                { id: 1, name: "최홍종", studentId: "82", firm: "건축동인 건축사사무소", phone: "010-6591-0990" },
-                { id: 2, name: "이영식", studentId: "83", firm: "(주)동원 건축사사무소", phone: "010-3218-3988" },
-                { id: 3, name: "정장환", studentId: "85", firm: "건축사사무소 ANOC", phone: "010-9908-6951" },
-                { id: 4, name: "배천문", studentId: "86", firm: "신성종합건축사사무소(주)", phone: "010-4739-5063" },
-                { id: 5, name: "이승주", studentId: "89", firm: "건축사사무소 다담", phone: "010-9071-9923" },
-                { id: 6, name: "이준", studentId: "95", firm: "건축사사무소 제이플러스", phone: "010-8600-6011" },
-                { id: 7, name: "이지은", studentId: "95", firm: "(주)마이네 건축사사무소", phone: "010-8394-1225" },
-                { id: 8, name: "김동우", studentId: "98", firm: "(주)건축사사무소 에스앤디", phone: "010-9146-9958" },
-                { id: 9, name: "이황희", studentId: "98", firm: "(주)디엘 종합건축사사무소", phone: "010-4749-0330" },
-                { id: 10, name: "윤수희", studentId: "06", firm: "국립중앙의료원", phone: "010-4772-5223" },
-                { id: 11, name: "안진호", studentId: "07", firm: "소모 건축사사무소", phone: "010-3298-5273" },
-                { id: 12, name: "김소연", studentId: "07", firm: "(주)이르키 건축사사무소", phone: "010-3215-0816" },
-                { id: 13, name: "김재윤", studentId: "07", firm: "에이브릭 건축사사무소", phone: "010-9368-0458" },
-                { id: 14, name: "김혜진", studentId: "08", firm: "건축사사무소 고요", phone: "010-9450-0549" },
-                { id: 15, name: "김선아", studentId: "08", firm: "(주)한국종합건축사사무소", phone: "010-6644-2261" },
-                { id: 16, name: "김영인", studentId: "09", firm: "선그릇 건축사사무소", phone: "010-6775-0807" },
-                { id: 17, name: "이종수", studentId: "11", firm: "(주)기안건축사사무소", phone: "010-3666-8253" },
-                { id: 18, name: "김경현", studentId: "11", firm: "한미글로벌 건축사사무소", phone: "010-8651-7139" },
-                { id: 19, name: "성기엽", studentId: "11", firm: "(주)종합건축사사무소 건원", phone: "010-7222-9152" },
-                { id: 20, name: "이용석", studentId: "13", firm: "이로이도 건축사사무소", phone: "010-6284-3299" }
-            ],
-            logistics: {
-                agency: "세진여행사 (김지은 담당자)",
-                contact: "021-6270-3996 / 189-6461-6467",
-                bus: "전용 리무진 버스 (공항 픽업 포함)",
-                hotel: "Shanghai International Hotel (예정)"
+              ]
+            },
+            {
+              id: 2,
+              title: "Day 2",
+              theme: "예술과 재생의 서안(West Bund)",
+              area: "West Bund & Xintiandi",
+              date: "11.28 (금)",
+              items: [
+                {
+                  time: "10:00",
+                  title: "롱 뮤지엄 웨스트 번드",
+                  engTitle: "Long Museum West Bund",
+                  architect: "Atelier Deshaus (Liu Yichun)",
+                  caseTalker: "이용석",
+                  type: "visit",
+                  image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Long_Museum_West_Bund.jpg/800px-Long_Museum_West_Bund.jpg",
+                  address: "3398 Longteng Ave, Xuhui District, Shanghai, China",
+                  details: "1950년대 석탄 하역장의 변신. '우산형 볼트' 구조와 노출 콘크리트의 미학.",
+                  summary: `[산업 유산의 재해석]
+과거 석탄을 실어 나르던 부두의 하역 교량(Coal Hopper)을 철거하지 않고 그대로 보존하여 미술관의 진입 공간으로 활용했습니다. "과거의 흔적 위에 세워진 시간의 층위"를 보여주는 대표적인 재생 건축 사례입니다.
+
+[우산형 볼트 (Umbrella Vault)]
+이 건물의 핵심은 노출 콘크리트로 만들어진 거대한 '우산형 볼트' 구조입니다. 캔틸레버 형식으로 뻗어 나온 이 구조물은 서로 독립적으로 서 있으면서도 시각적으로 연결되어 공간에 리듬감을 부여합니다. 볼트 사이의 틈으로 들어오는 빛은 콘크리트의 거친 질감을 부드럽게 감싸 안습니다.`,
+                  pdfContent: `[개요]
+Long Museum West Bund는 상하이 황푸강변 서안 문화 회랑의 중심에 위치한 현대미술관이다. 2014년 개관했으며, 중국 대표 건축가 Liu Yichun(리우이춘)이 설계했다. 약 33,000㎡의 면적과 4개의 층으로 이루어져 있다. 건축적 특징은 콘크리트 우산형 볼트 구조와 산업유산의 보존에 있다. 동양과 서양, 과거와 현대미술을 망라한 다양한 전시와 프로그램이 운영된다.
+
+[땅과 시간의 층위]
+이곳은 과거의 흔적 위에 세워진 시간의 층위를 잘 나타낸다. 1950년대 석탄을 실어 나르던 하역교량은 해체되지 않고 그대로 남아, 새로운 진입공간의 구조가 되었다. 땅속의 오래된 주차구조물은 다시 전시장으로 전환되어, 산업의 기억을 전시의 무대로 바꾸었다. 건축은 이 과거와 현재를 분리하지 않고, 한 몸처럼 이어지게 엮어내며 역사성을 공간으로 번역했다. 이곳을 걸을 때 우리는 '새로움'보다 '남겨진 시간'의 존재감을 먼저 느낀다.
+
+[우산형 볼트와 산업유산의 재해석]
+이 미술관은 중국 현대건축의 선두주자인 Liu Yichun과 Atelier Deshaus의 대표작이다. 설계팀은 "과거의 흔적을 품은 채 새로움을 더하는 것"을 고민하며, 기존 산업유산 구조물을 창의적으로 해석했다. 이 건축의 핵심은 구조가 공간의 리듬을 만든다는 점이다. '우산형 볼륨'이라 불리는 콘크리트 아치는 하중을 지탱하면서 동시에 전시실의 천장이 된다. 둥근 곡선과 수직 벽의 교차가 공간을 단조롭지 않게 만들고, 이동에 따라 빛의 패턴이 변한다. 구조는 숨겨지지 않고 그대로 드러나며, 공간을 리드미컬하게 나눈다. 그 안을 걷는 사람의 시선은 건축의 구조선과 함께 천천히 흐른다.
+
+[도시와 강변, 외부와의 관계]
+롱 미술관은 황푸강 강변의 문화회랑 속에 있다. 건축은 도시 속에 돌출 되지 않고, 강변의 풍경에 맞춰 자신을 낮춰서 있다. 넓은 진입광장과 보행로, 그리고 강으로 열린 시선이 외부와 내부를 잇는다. 이 건축은 닫힌 미술관이 아니라, 도시와 함께 호흡하는 공공의 장소다.
+
+[재료의 물성과 건축의 태도]
+전면의 광장은 간단한 비워냄으로 방문자의 동선을 유도 한다. 개구부의 비율과 깊이로 공간의 분위기를 연출하며 바람과 소음,물과 빛의 변화도 느끼게 한다. 전시를 위한 건물이 아니라, 전시를 품는 건축이다. 대형 전시부터 실험적 설치까지 다양한 형식이 자유롭게 담긴다. 지하에서 지상으로 이어지는 공간은 크고 작으며, 어둠과 밝음이 교차하며 끊임없이 변화한다. 건축은 전시의 틀을 고정하지 않고, 변화에 맞춰 확장한다. 이 유연함 이야말로, 롱뮤지엄 미술관의 언어이다.`
+                },
+                {
+                  time: "11:30",
+                  title: "웨스트 번드 아트센터",
+                  engTitle: "West Bund Art Center",
+                  architect: "Schmidt Hammer Lassen (Renovation)",
+                  caseTalker: "이황희",
+                  type: "visit",
+                  image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/West_Bund_Art_%26_Design_2019.jpg/800px-West_Bund_Art_%26_Design_2019.jpg",
+                  address: "2555 Longteng Ave, Xuhui District, Shanghai, China",
+                  details: "항공기 제조 공장의 뼈대를 살려 만든 거대한 갤러리.",
+                  summary: `[항공 공장의 변신]
+본래 상하이 항공기 제조 공장의 격납고였던 건물을 리모델링했습니다. 거대한 철골 트러스 구조와 높은 층고를 그대로 살려 대형 설치 미술이나 아트 페어를 수용할 수 있는 압도적인 공간감을 제공합니다.
+
+[웨스트 번드 마스터플랜]
+황푸강변의 낙후된 공업 지대였던 이곳은 이제 퐁피두 센터 분관(West Bund Museum)을 비롯해 수많은 갤러리가 모인 '아시아 최대 규모의 문화 예술 특구'로 탈바꿈했습니다.`,
+                  pdfContent: `[과거: Shanghai Aircraft Manufacturing Factory]
+재개발 전 이 부지는 거대한 금속 프레임 공장이었다. 1950~70년대 중국 항공 산업의 전형적인 붉은 벽돌과 강철 트러스 구조를 가졌으며, 공장 지붕은 톱니형(saw-tooth) 형태가 많았다. 현재 미술관 주변 산책로 자리에는 철제 파이프 구조물, 크레인, 운반 레일 등이 노출된 채 있었으며, 바닥은 거친 콘크리트 슬래브였다. 강변은 공업용 부두 성격이 강했으며, 일반 시민이 접근할 수 없는 밀폐된 산업 구역이었다.
+
+[현재: 웨스트 번드 아트센터의 재현]
+David Chipperfield의 설계 철학과 상하이 도시계획 변화에 따라 산업시설은 철거되거나 재해석되었다. 기존 공장 건물 대부분은 철거되었으나 일부 구조물(매스, 건축적 스케일감)은 현장 경험을 정제하여 재해석하는 방식으로 반영되었다. 폐쇄된 산업지대를 '열린 보행 레이어'로 바꾸는 대대적 공원화 작업이 진행되었고, 웨스트 번드 미술관, 웨스트 번드 아트센터, 롱미술관 등 문화시설이 단계적으로 들어서며 상하이 최대 문화 콤플렉스로 재탄생했다.
+
+[설계 특징]
+강변을 따라 매우 낮고 수평적인 매스를 강조하며, "pin-wheel" 형태의 세 개의 갤러리 볼륨이 중심 로비를 기준으로 회전하듯 열려 있다. 중앙 오픈 로비는 투과성 있는 "공공의 실내광장"이 핵심이며, 북쪽 수변을 비워 사람의 흐름 레이어가 지나가도록 계획했다. 매스의 틈 사이로 들어오는 채광은 단순한 대각선/수직선으로 자연채광 방향을 표현한다.
+
+[West Bund Museum]
+상하이시는 기존 상업지구를 문화 예술 특구로 만드는 웨스트 번드 마스터플랜을 기획했다. 기존 공장, 상업시설들이 미술관 또는 기타 공연 예술 센터들로 변모하여 공원과 산책로 등 황푸강 일대로 문화 동네가 만들어졌다. 세계적 수준의 문화, 기술 복합 공간으로 평가되는 아시아 최대 규모의 예술 특구이다. 약 25,000m2의 건물은 황푸강변에 자리하고 있는 웨스트 번드 뮤지엄(미술관)은 퐁피두 센터가 유럽 이외에 분관을 오픈한 첫 번째 장소 (첫 아시아 분관)이다. 데이비드 치퍼필드가 11년에 걸쳐 진행된 복원 작업 중에서 기존 요소에 대한 구조의 공간적 맥락을 중요시하며, 현대의 부분들로 옮겨오지만 어느 하나 치우치지 않으며 반영한 모습들을 이루어 건물의 복잡한 역사를 있는 그대로 존중하고 이어가며 기술적인 부분들을 현대적인 구조와 함께 조화를 이루어 완성시킨 하나의 걸작으로 평가 받고 있다.`
+                },
+                {
+                  time: "14:00",
+                  title: "더 루프",
+                  engTitle: "The Roof",
+                  architect: "Jean Nouvel",
+                  caseTalker: "김혜진",
+                  type: "visit",
+                  image: "https://images.unsplash.com/photo-1505577037969-27897967755a?q=80&w=800&auto=format&fit=crop",
+                  address: "458 Madang Rd, Huangpu District, Shanghai, China",
+                  details: "신천지의 붉은 벽돌과 대조되는 '살아있는 파사드'. 식물로 뒤덮인 붉은 건축물.",
+                  summary: `[도심 속의 작은 도시]
+장 누벨(Jean Nouvel)은 상하이의 전통 주거 양식인 릴롱(골목길)을 현대 상업 공간에 접목했습니다. 건물 전체를 감싸는 붉은색은 인근 신천지의 벽돌 색감과 조화를 이루면서도 강렬한 존재감을 드러냅니다.
+
+[살아있는 파사드]
+조경 스튜디오 ASPECT와 협업하여 수천 개의 화분으로 파사드를 덮었습니다. 계절에 따라 변하는 식물들은 건축물을 '숨 쉬는 유기체'로 만듭니다. 반투명한 캐노피와 루버를 통해 들어오는 빛은 붉은 벽과 식물을 통과하며 몽환적인 분위기를 연출합니다.`,
+                  pdfContent: `[개요]
+상하이 신천지(Xintiandi) 일대는 19세기 릴롱(Lilong) 주거지에서 21세기 상업복합지로 변모하는 대표적 도시재생 구역임. The Roof는 신천지 동측, Heng Ji-CIFI Tiandi 개발지 내 위치하며, 도시적 중심성과 공공성을 동시에 추구.
+
+[역사적 맥락: 릴롱 및 석고문]
+릴롱(里弄)과 석고문(Shikumen)은 근대 상하이 도시 형성에서 중요한 역할을 담당한 주거 유형이다. 19세기 개항기 서구 세력의 진출과 인구 급증, 도시 내 난민 유입 등의 맥락에서 탄생했다. 릴롱은 좁고 복잡한 골목길과 체계적인 블록 배치, 각 가구마다 중정이 배치되는 구조를 특징으로 한다. The Roof는 릴롱의 골목망, 중정, 인간적 스케일 등 전통적 공간 논리를 현대적으로 재구성하였다. 오픈 코리도, 루프가든 그리고 식생 입면 등은 신체적 경험과 환경 조절, 커뮤니티 네트워크의 연속성을 현대적 어휘로 확장한 사례이다.
+
+[장 누벨의 설계장치]
+1. 빛의 조율: 상하이의 직사광, 습윤 기후에 맞춘 '반투명 캐노피', '수목필터', '적색 파사드 반사광'의 삼중 필터링 체계. 낮에는 빛의 반사로붉은 공기층을, 저녁에는 간접광의 회절로 깊은 음영을 만든다.
+2. 경계의 중간: 릴롱 골목의 'semi-outdoor' 감각을 2-3층 회랑의 반외부 통로로 재현. 실내에 있어도 바람을 느끼는 상태로, city buffer 개념을 느끼기.
+3. 프레임과 시선: 각 회랑 벽면의 루버와 플랜터 박스가 시선을 수평방향으로 유도함. 외부 도시 풍경 보다 내부 골목 리듬에 집중할 수 있음.
+4. 감각적 대비: 내외부 다른 톤의 변화로 도심 속 전이 체험을 제공.
+5. 공기의 장치: 캐노피 아래에 형성되는 음압, 속도, 공기층의 변화와 차이. 조경, 차양을 너머 '공기의 질감'을 다층화 하는 장치로서의 설계.
+
+[주요 설계 특징]
+Jean Nouvel은 The Roof를 "도심 속의 작은 도시"로 설정하고, 상하이 릴롱의 골목 구조를 현대적으로 재구성했다. 붉은 외피와 베이지 프레임은 전통의 재료감을 유지하면서 도시 풍경에 조화를 주고, 투명 캐노피와 루버는 시간과 계절에 따라 빛의 농도를 달리해 공간 깊이를 조율한다. ASPECT Studios는 The Roof를 "식물로 숨 쉬는 파사드"로 정의하고, 외피 전면에 다층 식재를 배치해 생태적 시스템으로 작동하도록 했다.`
+                },
+                {
+                  time: "16:00",
+                  title: "1000 트리즈",
+                  engTitle: "1000 Trees",
+                  architect: "Heatherwick Studio",
+                  caseTalker: "정장환",
+                  type: "visit",
+                  image: "https://images.unsplash.com/photo-1641628092773-74255f6337a7?auto=format&fit=crop&w=800&q=80",
+                  address: "600 Moganshan Rd, Putuo District, Shanghai, China",
+                  details: "현대판 바빌론의 공중정원. 1,000개의 구조 기둥 위에 나무를 심은 파격적 디자인.",
+                  summary: `[구조가 곧 장식이다]
+토마스 헤더윅은 건물을 지탱하는 기둥을 숨기지 않고 오히려 밖으로 드러내어 화분으로 만들었습니다. 1,000개의 콘크리트 기둥 머리마다 나무가 심어져 있어, 멀리서 보면 거대한 산이나 숲처럼 보입니다.
+
+[도시의 숲]
+단순한 쇼핑몰이 아니라 도시의 열섬 현상을 완화하고 공기를 정화하는 거대한 필터 역할을 자처합니다. 모간산루 예술지구(M50)와 인접하여 상하이의 새로운 랜드마크로 자리 잡았습니다.`,
+                  pdfContent: `[도심속의 자연 + 공중정원]
+2011년부터 헤더윅 스튜디오에서 진행되었던 ‘1000그루 나무(1000 Trees)’는 상하이 예술 단지 모간산루 50번지(M50)에서 20분 거리에 위치한 6헥타르(6만 제곱미터) 부지에 설계된 복합 개발 시설이다. 이 건물에서 가장 두드러지는 구조는 나무 모양으로 형상화된 1,000개의 기둥이다. 그리고 각 기둥의 꼭대기에 나무를 심은 화분을 배치하여 프로젝트의 특징을 액면 그대로 보여준다.
+
+[Design Inspiration]
+헤더윅 스튜디오는 '1000 Trees'를 통해 인간과 자연이 단절된 공간이 아닌, 서로 교감하고 공존하는 공간으로 조성하여 자연과 도시를 연결하고 자연과 건축물의 융합을 통해 사람들에게 새로운 경험을 제공한다. 바빌론의 공중정원을 모티브로 디자인 하였다고 한다.
+
+[Ecology]
+1000그루가 넘는 나무와 25만 개 이상의 식물이 건물 곳곳에서 생식하고 있어 숨쉬는 건축물이라고 할 수 있고 도시의 열섬화를 막아내고 공기를 정화하는 친환경적인 도심속 필터로 작용하고 있다.
+
+[Overview]
+이 건축물 내부에는 레스토랑, 박물관, 갤러리 등이 위치하고 있으며, 상하이의 역사적 산업단지 푸신(Fuxin) 밀가루 공장과 푸펑(Fufeng) 밀가루 공장을 보수하여 유지하고 있다.`
+                },
+                {
+                  time: "18:00",
+                  title: "신천지",
+                  engTitle: "Xintiandi",
+                  caseTalker: "-",
+                  type: "walk",
+                  address: "Xintiandi, Huangpu District, Shanghai, China",
+                  details: "석고문(Shikumen) 양식을 보존한 상하이 도시재생의 효시."
+                }
+              ]
+            },
+            {
+              id: 3,
+              title: "Day 3",
+              theme: "재료의 물성과 빛",
+              area: "Hongkou & Lujiazui",
+              date: "11.29 (토)",
+              items: [
+                {
+                  time: "10:00",
+                  title: "1933 라오장팡",
+                  engTitle: "1933 Old Millfun",
+                  architect: "Balfours",
+                  caseTalker: "김재윤",
+                  type: "visit",
+                  image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/1933_Old_Millfun.jpg/800px-1933_Old_Millfun.jpg",
+                  address: "10 Shajing Rd, Hongkou District, Shanghai, China",
+                  details: "옛 도축장의 기묘한 변신. 미로 같은 콘크리트 동선과 빛의 대비.",
+                  summary: `[고딕 아르데코와 브루탈리즘]
+1933년 영국 건축가 발푸어가 설계한 이 건물은 원래 동아시아 최대 규모의 도축장이었습니다. 장식 없는 콘크리트의 육중함(브루탈리즘)과 기하학적 아름다움(아르데코)이 기묘하게 결합되어 있습니다.
+
+[기능주의의 미학]
+복잡하게 얽힌 내부 동선은 사실 철저한 기능주의의 산물입니다. 가축이 이동하는 길(우도)은 미끄러지지 않도록 거칠게 마감되었고, 사람의 길과 철저히 분리되어 있습니다. 중심부의 아트리움(Air Bridge)과 버섯 모양의 기둥들은 빛과 그림자의 강렬한 대비를 만들어냅니다.`,
+                  pdfContent: `[리모델링을 통한 복합예술공간]
+기존 상하이 도살장(Shanghai Slaughter house)였으나 리노베이션 되면서 Old Millfun으로 개명. (Mill 밀가루 공장, Fun 즐거움) / 라오창팡(Lao 오래된, Chang fang 공장, 방직소)
+1933년에 지어진 건물로, 당시에는 드물었던 철근 콘크리트로 시공되었음. (우산형 기둥 – 팔각형 및 사각형 두 가지로 전체 약 300개)
+
+[건축적 특징]
+1. 미로 같은 동선: 내부 통로가 미로처럼 얽혀 있어 공간이 분설되면서도 연결됨. 경사진 통로나 연결다리, 원형과 사각형 구조가 조화를 이루며, 전체적으로 일종의 미궁처럼 설계된 것이 큰 특징.
+2. 판옵티콘 구조: 중심 감시탑에서 전체 공간을 감찰할 수 있게 설계되어, 각각의 구역과 통로가 한 눈에 들어옴. 이는 당초 도축장 운영의 효율성과 안전을 고려한 설계 방식.
+3. 동물의 동선 고려: 도축장 본연의 기능을 반영해, 소나 돼지가 역주행 하지 못 하도록 경사진 통로(우도)가 배치됨.
+4. 빛과 통풍: 두꺼운 벽면과 큰 창, 다양한 구조적 개방부를 통해 자연광이 건물 내부 깊숙이 들어오며, 자연 환기 역시 용이함.
+5. 디테일 보존: 현재 문화공간으로 리모델링 되었음에도 불구하고, 당시의 도축장 흔적과 건축적 디테일이 상당 부분 보존.
+6. 지붕: 지붕이 없어 자연광 유입 가능하여 별도 조명이 불필요함. 우도 전체 길이는 약 150미터, 바닥은 거칠게 하여 가축 부상 방지.
+
+[재탄생 과정]
+1998년 상하이 시정부가 복합 문화공간으로 리모델링하며 변화를 주도. 상하이 시 정부와 문화 산업 관계자들은 이곳을 새로운 모습으로 완전히 탈바꿈시키자' 와 '그 전의 모습을 간직하면서 리모델링하자'라는 의견으로 팽팽하게 맞섰으나 도축장 분위기를 그대로 살리면서 리모델링하자는 의견으로 결론. 지금도 80년 전 건물의 분위기가 그대로 전해질 뿐 아니라 도축 통로, 가축 우리, 저장 창고 등 그 시대의 기계식 도축장 분위기도 느낄 수 있음. 시기적으로 산업화, 근대화의 흐름이 매우 빠르던 시기였으며 상하이 건축계에서는 미국 유럽의 모더 니즘과 아르데코(1930년대), 산업 설계가 복합적으로 유입됨. 초기 브루탈리즘적의 건축 걸작이라는 평가도 있음.`
+                },
+                {
+                  time: "11:30",
+                  title: "오로라 뮤지엄",
+                  engTitle: "Aurora Museum",
+                  architect: "Tadao Ando (Renovation)",
+                  caseTalker: "이용석",
+                  type: "visit",
+                  image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Aurora_Plaza_Shanghai.jpg/800px-Aurora_Plaza_Shanghai.jpg",
+                  address: "99 Fucheng Rd, Lujiazui, Pudong, Shanghai, China",
+                  details: "안도 다다오의 중국 내 첫 리노베이션. '빛'과 '기하학'의 정수.",
+                  summary: `[보석 상자]
+황푸강변의 기존 오피스 빌딩을 안도 다다오가 박물관으로 개조했습니다. 외관은 유리 커튼월로 마감하여 밤이 되면 스스로 빛나는 '푸른 보석 상자'처럼 보입니다.
+
+[공간의 드라마]
+내부에는 안도 특유의 노출 콘크리트와 기하학적 질서가 지배합니다. 핵심 공간인 나선형 계단은 천창에서 쏟아지는 빛을 받으며 관람객을 상층부로 이끕니다. 유물 전시에 최적화된 절제된 조명과 정적인 공간감이 돋보입니다.`,
+                  pdfContent: `[빛의 건축: 자연광과 명상의 공간]
+Aurora Museum은 '빛'이라는 안도 다다오의 건축 언어가 가장 집약적으로 드러나는 공간입니다. 건물 중심부에 위치한 나선형 계단은 상층부 천창으로부터 유입 되는 자연광을 적극적으로 활용하며, 관람객이 계단을 오르내리는 동안 시간과 각도에 따라 변화하는 빛의 흐름을 체험하게 합니다. 전시 공간은 직접광보다는 간접광과 정교한 인공조명을 통해 유물과 공간 모두에 집중할 수 있는 절제된 분위기를 조성하고 있습니다.
+
+[개요]
+Aurora Museum은 기존 상업 건물(오피스)의 일부를 리모델링하여 박물관으로 탈바꿈한 공간입니다. 이 프로젝트는 안도 다다오가 중국에서 처음으로 수행한 리노베이션 작업으로, 그의 대표적인 건축 철학인 '빛의 명상적 활용'이 잘 드러납니다. 나선형 계단, 천창, 외부 개방부 등을 통해 자연광을 극적으로 조절하며, 전통적인 박물관과는 달리 조형미에 집중된 미니멀한 전시 공간으로 구성되어 있습니다.
+
+[도시와의 경계: 상하이와 조응하는 건축]
+기존 상업 건물을 리노베이션한 이 박물관은 간결한 형태와 재료의 절제를 통해 새로운 건축미를 구현하고 있습니다. 외관은 유리 커튼월로 구성되어 도시 맥락 속에서 유려한 인상을 주며, 내부는 노출 콘크리트와 석재, 금속 등을 활용하여 단순한 선과 면의 조형미를 강조하였습니다. 낮에는 유리 외피가 도시 풍경을 반사하여 풍경과 하나가 되며, 밤에는 은은한 조명 아래 빛나는 보석 상자처럼 독립적인 존재감을 드러냅니다.
+
+[경험의 흐름: 나선형 동선과 전시의 시퀀스]
+안도는 박물관 관람을 단순한 시각적 활동이 아닌, 신체적 동선과 감성적 흐름이 결합된 체험으로 구성하고자 하였습니다. 중앙의 나선형 계단은 단순한 이동 통로를 넘어 관람 여정의 핵심 구조물로 기능하며, 관람객은 이 계단을 따라 오르내리며 공간의 깊이와 시간적 흐름을 체감하게 됩니다.
+
+[전통과 현대의 매개: 유물과 공간의 균형]
+이 박물관은 중국 고대의 옥기, 청자, 불교 조각 등을 주요 소장품으로 전시하고 있으며, 안도는 현대적인 건축 공간 안에서 전통 유물이 조화를 이루도록 섬세하게 설계하였습니다.`
+                },
+                {
+                  time: "14:00",
+                  title: "루자쭈이 전시 센터",
+                  engTitle: "Lujiazui Exhibition Center",
+                  architect: "OMA",
+                  caseTalker: "배천문",
+                  type: "visit",
+                  image: "https://images.unsplash.com/photo-1538428494232-9c0d8d3a50f6?q=80&w=800&auto=format&fit=crop",
+                  address: "30 Yincheng Middle Rd, Pudong, Shanghai, China",
+                  details: "옛 선박의 요람 위에 매달린 '공간적 틀(Spatial Framework)'.",
+                  summary: `[산업 유산과 OMA]
+OMA는 옛 상하이 조선소의 선박 건조대(경사로) 부지에 새로운 전시 센터를 설계했습니다. 건물을 광장 위에 띄워 올림으로써(Cantilever), 하부의 경사로 공간을 대규모 이벤트나 야외 극장으로 활용할 수 있게 만들었습니다.
+
+[미완성 선박의 은유]
+건물을 감싸고 있는 금속 메쉬(Mesh) 소재는 내부의 철골 구조를 은은하게 드러내며, 마치 이 자리에서 건조되던 미완성 선박의 선체를 연상시킵니다.`,
+                  pdfContent: `[개요]
+루자쭈이 하버 시티 전시 센터는 상하이 푸둥의 가장 최근 개발 지역인 황푸 강변에 위치해 있으며, 옛 '상하이 조선소' 부지에 자리 잡은 이 프로젝트 부지는 오랜 조선 산업의 역사를 자랑한다. 새로운 전시 센터는 옛 선박의 요람이었던 경사로에 자리 잡고 있으며, 주변 금융 지구에 집중된 다양한 이벤트 공간을 제공한다.
+
+[건축 디자인]
+건물의 물질성과 건축 양식은 이 부지의 산업적 과거와 소통을 형성한다. 금속 망사로 싸인 신비한 물체가 강철 구조를 드러내고, 이 부지에 있던 미완성 선박 선체를 연상시킵니다.
+설계자 OMA는 전시 센터를 광장 위에 매달아 경사로 아래 다른 전시 공간과 연결되는 "공간적 틀"로 구상했다. 열린 공간을 구성해 영화 상영, 패션쇼, 콘서트를 위한 새로운 프로그램 기회를 제공하고, 새로운 볼륨은 기존 경사로를 대규모 행사를 위한 극장 공간으로 탈바꿈 시키는 한편, 고가 박스 아래 광장은 더욱 친밀한 행사를 위한 공간으로 활용될 수 있게 했다.
+
+[Lujiazui]
+황푸 강을 따라 지어진 주 전시 공간은 지상 8미터 높이의 캔틸레버 박스 형태로 설계되어 강변과 상하이 와이탄의 탁 트인 전망을 제공하며, 그 아래에는 지붕이 있는 개방형 공간이 조성된다. 전시 공간 외에도 강당, 로비, 경사로, 그리고 건물의 매스로 둘러싸인 지붕이 있는 광장이 있다. 또한, 강변에는 영화상영, 패션쇼, 콘서트등 다양한 프로그램을 위한 대형 광장이 조성되었다.`
+                },
+                {
+                  time: "15:30",
+                  title: "상하이 심포니 홀",
+                  engTitle: "Shanghai Symphony Hall",
+                  architect: "Arata Isozaki",
+                  caseTalker: "성기엽",
+                  type: "visit",
+                  image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Shanghai_Symphony_Hall.jpg/800px-Shanghai_Symphony_Hall.jpg",
+                  address: "1380 Fuxing Middle Rd, Xuhui District, Shanghai, China",
+                  details: "음향을 위한 완벽한 'Box-in-Box' 구조와 물결치는 지붕.",
+                  summary: `[소리를 위한 건축]
+아라타 이소자키는 지하철 소음과 진동을 차단하기 위해 건물 전체를 스프링 위에 띄우는 '플로팅 구조(Box-in-Box)'를 적용했습니다.
+
+[형태와 재료]
+대나무를 엮은 듯한 테라코타 벽돌 외관은 상하이의 전통적인 질감을 현대적으로 표현했습니다. 안장 모양의 부드러운 지붕 곡선은 음향 반사를 고려한 기능적 형태이면서 동시에 소리의 파동을 시각화한 것입니다.`,
+                  pdfContent: `[상하이 심포니 홀의 특징]
+1. "두 개의 볼륨(BOX-IN-BOX)" – 음향을 위한 이중 구조
+내부 콘서트홀과 18m 높이의 외부 보호 쉘(skin)이 분리되어 있고, 사이에 진동을 차단하는 완충층이 존재한다. 지하 16m 높이에 300개의 진동 차단기가 설치되어 있으며 이는 상하이 지하철·도심 진동 영향이 최소화하기 위해 반영한 설계이다. 메인 홀을 외피와 분리된 이중구조로 설계하여 외부 진동을 차단하고, 음향성능을 확보했다.
+
+2. 도시와 건물 사이의 완충적 광장
+약 100m길이의 녹지가 있는 건물 앞 야외광장은 건물과 도로를 분리하고 사람들이 휴식을 취할 수 있는 고전 중국 정원의 매력을 선사하며, 녹지 공간은 교통 소음을 줄이는 실질적인 기능을 수행함과 동시에 단순한 진입부가 아니라 도시와 심포니홀 사이의 '전이 공간'으로 작동한다.
+
+3. 상하이의 역사적 건축과 현대성의 결합
+외부는 상하이 구도심의 석조·회벽 톤을 추상적으로 재해석한 형태로 붉은색, 회색, 갈색의 테라코타 벽돌로 구성되어 있어 튀지않고 주변과 잘 어우러진다. 단순한 복원이나 전통양식 반복이 아니라, 현대적 재료·패턴으로 '기억된 이미지'를 재구성한 접근방식이며, 이는 이소자키의 "맥락을 재해석"하는 건축적 언어와 정확히 맞닿아 있다.
+
+4. 음악을 '움직임'으로 읽는 공간
+내부 홀 천장과 측벽의 곡선은 음향 반사와 잔향 제어라는 실용적 목적과 동시에 소리의 흐름을 시각화한 조형적 장치 역할을 한다.
+
+5. 빛을 통한 공간 농도 조절
+외피의 수직적 패턴은 자연광을 산란시켜 내부 라운지·대기공간에서 '시간대에 따라 농도가 달라지는 빛 환경'을 형성한다.`
+                },
+                {
+                  time: "17:00",
+                  title: "티엔즈팡 & 와이탄 야경",
+                  type: "walk",
+                  caseTalker: "최홍종",
+                  address: "Tianzifang, Huangpu District, Shanghai, China",
+                  image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Tianzifang_Shanghai.jpg/800px-Tianzifang_Shanghai.jpg",
+                  details: "예술 거리 산책 및 황푸강 야경 감상"
+                }
+              ]
+            },
+            {
+              id: 4,
+              title: "Day 4",
+              theme: "도시의 기록과 귀환",
+              area: "Pudong & Airport",
+              date: "11.30 (일)",
+              items: [
+                {
+                  time: "09:30",
+                  title: "상하이 도시계획 전람관",
+                  type: "visit",
+                  image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Shanghai_Urban_Planning_Exhibition_Center.jpg/800px-Shanghai_Urban_Planning_Exhibition_Center.jpg",
+                  address: "100 Renmin Da Dao, Huangpu District, Shanghai, China",
+                  desc: "상하이의 과거, 현재, 미래 도시 계획 조망"
+                },
+                {
+                  time: "11:00",
+                  title: "푸동지구 마천루",
+                  type: "view",
+                  image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Shanghai_skyline_2019.jpg/800px-Shanghai_skyline_2019.jpg",
+                  address: "Lujiazui, Pudong, Shanghai, China",
+                  desc: "상하이 타워, SWFC, 진마오 타워 등 초고층 빌딩군 조망 및 자유 시간"
+                },
+                {
+                  time: "13:00",
+                  title: "푸동 공항 이동",
+                  type: "logistics",
+                  desc: "귀국편 탑승 수속"
+                }
+              ]
             }
+          ],
+          participants: [
+            { id: 1, name: "최홍종", studentId: "82", firm: "건축동인 건축사사무소", phone: "010-6591-0990" },
+            { id: 2, name: "이영식", studentId: "83", firm: "(주)동원 건축사사무소", phone: "010-3218-3988" },
+            { id: 3, name: "정장환", studentId: "85", firm: "건축사사무소 ANOC", phone: "010-9908-6951" },
+            { id: 4, name: "배천문", studentId: "86", firm: "신성종합건축사사무소(주)", phone: "010-4739-5063" },
+            { id: 5, name: "이승주", studentId: "89", firm: "건축사사무소 다담", phone: "010-9071-9923" },
+            { id: 6, name: "이준", studentId: "95", firm: "건축사사무소 제이플러스", phone: "010-8600-6011" },
+            { id: 7, name: "이지은", studentId: "95", firm: "(주)마이네 건축사사무소", phone: "010-8394-1225" },
+            { id: 8, name: "김동우", studentId: "98", firm: "(주)건축사사무소 에스앤디", phone: "010-9146-9958" },
+            { id: 9, name: "이황희", studentId: "98", firm: "(주)디엘 종합건축사사무소", phone: "010-4749-0330" },
+            { id: 10, name: "윤수희", studentId: "06", firm: "국립중앙의료원", phone: "010-4772-5223" },
+            { id: 11, name: "안진호", studentId: "07", firm: "소모 건축사사무소", phone: "010-3298-5273" },
+            { id: 12, name: "김소연", studentId: "07", firm: "(주)이르키 건축사사무소", phone: "010-3215-0816" },
+            { id: 13, name: "김재윤", studentId: "07", firm: "에이브릭 건축사사무소", phone: "010-9368-0458" },
+            { id: 14, name: "김혜진", studentId: "08", firm: "건축사사무소 고요", phone: "010-9450-0549" },
+            { id: 15, name: "김선아", studentId: "08", firm: "(주)한국종합건축사사무소", phone: "010-6644-2261" },
+            { id: 16, name: "김영인", studentId: "09", firm: "선그릇 건축사사무소", phone: "010-6775-0807" },
+            { id: 17, name: "이종수", studentId: "11", firm: "(주)기안건축사사무소", phone: "010-3666-8253" },
+            { id: 18, name: "김경현", studentId: "11", firm: "한미글로벌 건축사사무소", phone: "010-8651-7139" },
+            { id: 19, name: "성기엽", studentId: "11", firm: "(주)종합건축사사무소 건원", phone: "010-7222-9152" },
+            { id: 20, name: "이용석", studentId: "13", firm: "이로이도 건축사사무소", phone: "010-6284-3299" }
+          ],
+          logistics: {
+            agency: "세진여행사 (김지은 담당자)",
+            contact: "021-6270-3996 / 189-6461-6467",
+            bus: "전용 리무진 버스 (공항 픽업 포함)",
+            hotel: "Shanghai International Hotel (예정)"
+          }
         };
 
         const App = () => {
-            const [activeTab, setActiveTab] = useState('itinerary');
-            const [selectedDay, setSelectedDay] = useState(1);
-            const [expandedIndex, setExpandedIndex] = useState(null);
-            const [articleView, setArticleView] = useState(null);
+          const [activeTab, setActiveTab] = useState('itinerary');
+          const [selectedDay, setSelectedDay] = useState(1);
+          const [expandedIndex, setExpandedIndex] = useState(null); 
+          const [articleView, setArticleView] = useState(null);
 
-            const currentDayData = tourData.days.find(d => d.id === selectedDay);
+          const currentDayData = tourData.days.find(d => d.id === selectedDay);
 
-            const toggleExpand = (index) => {
-                setExpandedIndex(expandedIndex === index ? null : index);
-            };
+          const toggleExpand = (index) => {
+            setExpandedIndex(expandedIndex === index ? null : index);
+          };
 
-            // --- Components ---
+          // --- Components ---
 
-            const ArticleModal = ({ item, onClose }) => {
-                const [viewMode, setViewMode] = useState('summary'); // 'summary' | 'pdf'
-                if (!item) return null;
+          const ArticleModal = ({ item, onClose }) => {
+            const [viewMode, setViewMode] = useState('summary'); // 'summary' | 'pdf'
+            if (!item) return null;
 
-                const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.engTitle || item.title)}`;
-
-                return (
-                    <div className="fixed inset-0 z-50 bg-white flex flex-col animate-fade-in">
-                        {/* Modal Header */}
-                        <div className="px-6 py-4 bg-white/95 backdrop-blur border-b border-stone-100 flex justify-between items-center sticky top-0 z-10 shadow-sm">
-                            <div className="flex items-center gap-3">
-                                <button onClick={onClose} className="p-2 -ml-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-full transition">
-                                    <IconArrowLeft size={24} className="" />
-                                </button>
-                                <span className="text-sm font-bold text-slate-800">Deep Dive</span>
-                            </div>
-                            <a 
-                                href={mapUrl} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-1.5 bg-blue-50 text-blue-600 px-3 py-1.5 rounded-full text-xs font-bold hover:bg-blue-100 transition"
-                            >
-                                <IconMapPin size={14} className="" />
-                                지도 보기
-                            </a>
-                        </div>
-
-                        <div className="flex-1 overflow-y-auto pb-24 scrollbar-hide">
-                            {item.image && (
-                                <div className="w-full h-64 sm:h-80 relative shrink-0">
-                                    <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-black/30"></div>
-                                    <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-white to-transparent pt-20">
-                                        <div className="flex items-center gap-2 mb-2 text-blue-600 font-bold text-sm">
-                                            <IconBuilding size={14} className="" />
-                                            <span>{item.architect}</span>
-                                        </div>
-                                        <h1 className="text-3xl sm:text-4xl font-bold text-white leading-tight mb-2 drop-shadow-md">
-                                            {item.title}
-                                        </h1>
-                                        <p className="text-slate-200 text-sm">{item.engTitle}</p>
-                                    </div>
-                                </div>
-                            )}
-
-                            <div className="px-6 sm:px-8 py-6 max-w-2xl mx-auto">
-                                {/* Case Talker Badge */}
-                                {item.caseTalker && (
-                                    <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-start gap-3 shadow-sm">
-                                        <div className="bg-white p-2.5 rounded-full text-slate-700 shadow-sm">
-                                            <IconUsers size={20} className="" />
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Case Talker</p>
-                                            <p className="text-slate-800 font-bold text-base">{item.caseTalker} <span className="text-sm font-normal text-slate-500">건축사</span></p>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Content Toggle */}
-                                {(item.summary || item.pdfContent) && (
-                                    <div className="flex p-1 bg-slate-100 rounded-lg mb-8">
-                                        <button 
-                                            onClick={() => setViewMode('summary')}
-                                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-md text-sm font-bold transition-all ${viewMode === 'summary' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400'}`}
-                                        >
-                                            <IconStar size={16} className="" /> 요약 (Summary)
-                                        </button>
-                                        <button 
-                                            onClick={() => setViewMode('pdf')}
-                                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-md text-sm font-bold transition-all ${viewMode === 'pdf' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400'}`}
-                                        >
-                                            <IconBookOpen size={16} className="" /> 가이드북 원문
-                                        </button>
-                                    </div>
-                                )}
-
-                                {/* Content Body */}
-                                <div className="animate-fade-in">
-                                    {viewMode === 'summary' ? (
-                                        // Summary View
-                                        <div className="space-y-6">
-                                            {item.summary ? item.summary.split('\n').map((paragraph, idx) => {
-                                                if (paragraph.trim().startsWith('[') && paragraph.trim().endsWith(']')) {
-                                                    return (
-                                                        <h3 key={idx} className="text-lg font-bold text-blue-900 mt-8 mb-3 border-l-4 border-blue-500 pl-3">
-                                                            {paragraph.replace(/[\[\]]/g, '')}
-                                                        </h3>
-                                                    );
-                                                }
-                                                if (paragraph.trim() === "") return <br key={idx} />;
-                                                return (
-                                                    <p key={idx} className="text-slate-700 text-base leading-relaxed font-medium">
-                                                        {paragraph}
-                                                    </p>
-                                                );
-                                            }) : (
-                                                <div className="p-8 text-center text-slate-400 bg-slate-50 rounded-xl">
-                                                    <IconFileText size={32} className="mx-auto mb-2 opacity-20"/>
-                                                    <p>요약 내용이 없습니다.</p>
-                                                </div>
-                                            )}
-                                        </div>
-                                    ) : (
-                                        // PDF Original View (Text Extracted)
-                                        <div className="bg-white">
-                                            <div className="mb-6 p-4 bg-amber-50 text-amber-800 text-xs rounded-lg flex gap-2 items-start">
-                                                <IconInfo size={14} className="shrink-0 mt-0.5"/>
-                                                <p>가이드북 PDF에서 추출한 원문 텍스트입니다.</p>
-                                            </div>
-                                            
-                                            {item.pdfContent ? item.pdfContent.split('\n').map((paragraph, idx) => {
-                                                if (paragraph.trim().startsWith('[') && paragraph.trim().endsWith(']')) {
-                                                    return (
-                                                        <h3 key={idx} className="text-xl font-bold text-slate-900 mt-10 mb-4 border-b pb-2 border-slate-200">
-                                                            {paragraph.replace(/[\[\]]/g, '')}
-                                                        </h3>
-                                                    );
-                                                }
-                                                if (paragraph.trim() === "") return <br key={idx} />;
-                                                return (
-                                                    <p key={idx} className="text-slate-600 text-lg leading-8 mb-4 text-justify">
-                                                        {paragraph}
-                                                    </p>
-                                                );
-                                            }) : (
-                                                <div className="p-12 text-center text-slate-400">
-                                                    <IconBookOpen size={48} className="mx-auto mb-4 opacity-20" />
-                                                    <p>해당 건축물의 가이드북 원문이 없습니다.</p>
-                                                </div>
-                                            )}
-                                            
-                                            <div className="mt-12 pt-12 border-t border-slate-200 text-center pb-8">
-                                                <p className="text-slate-300 text-sm italic">End of Guidebook Text</p>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                );
-            };
-
-            // --- Views ---
-
-            const ItineraryView = () => (
-                <div className="pb-28 animate-fade-in">
-                    <div className="px-6 py-8 bg-white sticky top-0 z-10 shadow-sm border-b border-slate-100">
-                        <div className="flex justify-between items-start mb-4">
-                            <div>
-                                <h2 className="text-2xl font-bold text-slate-900 tracking-tight">{currentDayData.title}</h2>
-                                <p className="text-slate-500 text-sm font-medium mt-1">{currentDayData.date} <span className="mx-1">|</span> {currentDayData.area}</p>
-                            </div>
-                            <div className="text-right">
-                                <span className="text-xs text-blue-600 font-bold bg-blue-50 px-2 py-1 rounded">{currentDayData.theme}</span>
-                            </div>
-                        </div>
-                        
-                        <div className="flex bg-slate-100 p-1 rounded-lg overflow-x-auto scrollbar-hide">
-                            {tourData.days.map((day) => (
-                                <button
-                                    key={day.id}
-                                    onClick={() => { setSelectedDay(day.id); setExpandedIndex(null); }}
-                                    className={`flex-1 min-w-[70px] py-2 rounded-md text-xs font-bold transition-all duration-300 whitespace-nowrap ${
-                                    selectedDay === day.id 
-                                        ? 'bg-white text-blue-900 shadow-sm' 
-                                        : 'text-slate-400 hover:text-slate-600'
-                                    }`}
-                                >
-                                    {day.title}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="px-6 py-6 space-y-4">
-                        {currentDayData.items.map((item, idx) => {
-                            const isExpanded = expandedIndex === idx;
-                            const hasDetails = !!item.details;
-
-                            return (
-                                <div 
-                                    key={idx} 
-                                    className={`relative group transition-all duration-500 ease-in-out ${
-                                        isExpanded ? 'my-6' : 'my-0'
-                                    }`}
-                                >
-                                    <div className={`absolute left-[19px] top-8 bottom-[-20px] w-[1px] bg-slate-200 ${idx === currentDayData.items.length - 1 ? 'hidden' : ''}`}></div>
-
-                                    <div className="flex gap-4 items-start">
-                                        <div className="flex flex-col items-center shrink-0 w-10">
-                                            <div className={`w-3 h-3 rounded-full border-2 z-10 mt-2 transition-colors duration-300 ${
-                                                isExpanded ? 'bg-blue-600 border-blue-600 scale-125' : 
-                                                hasDetails ? 'bg-white border-slate-400 group-hover:border-slate-600' : 'bg-slate-200 border-slate-200'
-                                            }`}></div>
-                                            <span className={`text-[10px] font-mono mt-2 font-medium ${isExpanded ? 'text-blue-600' : 'text-slate-400'}`}>
-                                                {item.time}
-                                            </span>
-                                        </div>
-
-                                        <div 
-                                            onClick={() => hasDetails && toggleExpand(idx)}
-                                            className={`flex-1 bg-white border rounded-xl transition-all duration-300 overflow-hidden ${
-                                                isExpanded 
-                                                    ? 'border-blue-100 shadow-xl ring-1 ring-blue-50' 
-                                                    : 'border-slate-100 shadow-sm hover:border-slate-300 active:scale-[0.99]'
-                                            } ${hasDetails ? 'cursor-pointer' : ''}`}
-                                        >
-                                            <div className="p-4">
-                                                <div className="flex justify-between items-start">
-                                                    <div>
-                                                        <div className="flex flex-wrap items-center gap-2 mb-1">
-                                                            <span className={`text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ${
-                                                                item.type === 'visit' ? 'bg-slate-100 text-slate-600' : 
-                                                                item.type === 'food' ? 'bg-amber-50 text-amber-600' : 
-                                                                'bg-slate-50 text-slate-500'
-                                                            }`}>
-                                                                {item.type === 'visit' ? 'Architecture' : item.type === 'food' ? 'Meal' : item.type === 'view' ? 'View' : 'Logistics'}
-                                                            </span>
-                                                            {item.architect && <span className="text-[10px] text-blue-600 font-bold flex items-center gap-1"><IconStar size={8} className="fill-current"/> {item.architect}</span>}
-                                                        </div>
-                                                        <h3 className={`text-lg font-bold leading-tight transition-colors ${isExpanded ? 'text-blue-900' : 'text-slate-800'}`}>
-                                                            {item.title}
-                                                        </h3>
-                                                        {item.engTitle && <p className="text-xs text-slate-400 mt-0.5">{item.engTitle}</p>}
-                                                        
-                                                        {!isExpanded && (
-                                                            <div className="mt-2">
-                                                                <p className="text-slate-500 text-sm line-clamp-1">{item.desc || item.details}</p>
-                                                                {item.caseTalker && (
-                                                                    <p className="text-xs text-blue-500 font-medium mt-1 flex items-center gap-1">
-                                                                        <IconUsers size={10} /> Case Talker: {item.caseTalker}
-                                                                    </p>
-                                                                )}
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                    {hasDetails && (
-                                                        <div className={`transition-transform duration-300 text-slate-300 ${isExpanded ? 'rotate-180 text-blue-400' : ''}`}>
-                                                            <IconChevronDown size={20} />
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            <div 
-                                                className={`transition-all duration-500 ease-in-out overflow-hidden ${
-                                                    isExpanded ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'
-                                                }`}
-                                            >
-                                                {item.image && (
-                                                    <div className="w-full h-48 bg-slate-200 relative">
-                                                        <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
-                                                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                                                    </div>
-                                                )}
-                                                <div className="p-5 bg-slate-50/50">
-                                                    {item.caseTalker && (
-                                                        <div className="mb-4 inline-flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-blue-100 shadow-sm">
-                                                            <IconUsers size={14} className="text-blue-600"/>
-                                                            <span className="text-xs font-bold text-blue-800">Case Talker: {item.caseTalker}</span>
-                                                        </div>
-                                                    )}
-                                                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Summary</h4>
-                                                    <p className="text-slate-700 text-sm leading-relaxed whitespace-pre-line font-medium mb-6">
-                                                        {item.details}
-                                                    </p>
-                                                    
-                                                    <button 
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            setArticleView(item);
-                                                        }}
-                                                        className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform hover:bg-blue-700"
-                                                    >
-                                                        <IconBookOpen size={18} />
-                                                        상세 해설 (Deep Dive)
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-            );
-
-            const MemberView = () => (
-                <div className="pb-24 animate-fade-in">
-                    <div className="px-6 py-10 bg-blue-900 text-white sticky top-0 z-10">
-                        <h1 className="text-2xl font-bold mb-2">Participants</h1>
-                        <p className="text-blue-200 text-sm">AAMU 건축사 20인 명단</p>
-                    </div>
-                    <div className="p-6 grid gap-4">
-                        {tourData.participants.map((person) => (
-                            <div key={person.id} className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-700 font-bold text-lg shrink-0">
-                                        {person.name[0]}
-                                    </div>
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-2">
-                                            <p className="font-bold text-slate-800 text-lg">{person.name} <span className="text-slate-400 text-xs font-normal">건축사</span></p>
-                                            <span className="px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] rounded-md font-bold flex items-center gap-1">
-                                                <IconGraduationCap size={10} /> {person.studentId}학번
-                                            </span>
-                                        </div>
-                                        <p className="text-xs text-slate-500 font-medium mt-0.5">{person.firm}</p>
-                                    </div>
-                                </div>
-                                <a href={`tel:${person.phone}`} className="flex items-center justify-center gap-2 w-full sm:w-auto bg-slate-50 sm:bg-transparent py-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition border border-slate-100 sm:border-0">
-                                    <IconPhone size={18} />
-                                    <span className="text-xs font-bold sm:hidden">{person.phone}</span>
-                                </a>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            );
-
-            const InfoView = () => (
-                <div className="pb-24 animate-fade-in">
-                    <div className="px-6 py-10 bg-blue-900 text-white">
-                        <h1 className="text-2xl font-bold mb-2">Logistics</h1>
-                        <p className="text-blue-200 text-sm">운영 및 비상 연락망</p>
-                    </div>
-                    
-                    <div className="p-6 -mt-6 space-y-4">
-                        <div className="bg-white p-5 rounded-xl shadow-lg border border-slate-100 flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
-                                    <IconUsers size={20} />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-slate-400 font-bold uppercase">Agency</p>
-                                    <p className="text-slate-800 font-bold">{tourData.logistics.agency}</p>
-                                </div>
-                            </div>
-                            <button className="bg-blue-600 text-white p-2.5 rounded-full hover:bg-blue-700 transition shadow-md">
-                                <IconPhone size={18} />
-                            </button>
-                        </div>
-
-                        <div className="bg-white p-6 rounded-xl shadow-md border border-slate-100 space-y-6">
-                            <div className="flex gap-4 items-start">
-                                <div className="mt-1 text-slate-300"><IconBuilding size={20} /></div>
-                                <div>
-                                    <p className="text-xs text-slate-400 font-bold uppercase mb-1">Accommodation</p>
-                                    <p className="text-slate-800 font-bold text-lg leading-tight">{tourData.logistics.hotel}</p>
-                                </div>
-                            </div>
-                            <div className="w-full h-[1px] bg-slate-100"></div>
-                            <div className="flex gap-4 items-start">
-                                <div className="mt-1 text-slate-300"><IconNavigation size={20} /></div>
-                                <div>
-                                    <p className="text-xs text-slate-400 font-bold uppercase mb-1">Transport</p>
-                                    <p className="text-slate-800 font-bold">{tourData.logistics.bus}</p>
-                                </div>
-                            </div>
-                            <div className="w-full h-[1px] bg-slate-100"></div>
-                            <div className="flex gap-4 items-start">
-                                <div className="mt-1 text-slate-300"><IconPhone size={20} /></div>
-                                <div>
-                                    <p className="text-xs text-slate-400 font-bold uppercase mb-1">Emergency</p>
-                                    <p className="text-slate-800 font-bold">{tourData.logistics.contact}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
+            // 지도 연결 수정: 주소와 Shanghai 키워드를 사용하여 정확도를 높였습니다.
+            const mapQuery = `${item.address}, Shanghai`;
+            const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
 
             return (
-                <div className="bg-slate-50 h-screen w-full max-w-md mx-auto overflow-hidden flex flex-col font-sans relative shadow-2xl border-x border-slate-200">
-                    {articleView && <ArticleModal item={articleView} onClose={() => setArticleView(null)} />}
+              <div className="fixed inset-0 z-50 bg-white flex flex-col animate-fade-in">
+                {/* Modal Header */}
+                <div className="px-6 py-4 bg-white/95 backdrop-blur border-b border-stone-100 flex justify-between items-center sticky top-0 z-10 shadow-sm">
+                   <div className="flex items-center gap-3">
+                       <button onClick={onClose} className="p-2 -ml-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-full transition">
+                          <IconArrowLeft size={24} />
+                       </button>
+                       <span className="text-sm font-bold text-slate-800">Deep Dive</span>
+                   </div>
+                   <a 
+                     href={mapUrl} 
+                     target="_blank" 
+                     rel="noopener noreferrer"
+                     className="flex items-center gap-1.5 bg-blue-500 text-white px-3 py-1.5 rounded-full text-xs font-bold hover:bg-blue-600 transition"
+                   >
+                     <IconMapPin size={14} className="stroke-white" />
+                     지도 보기
+                   </a>
+                </div>
 
-                    <div className="bg-blue-900 text-white px-6 py-4 shrink-0 flex justify-between items-center z-20 shadow-md">
-                        <span className="font-bold text-sm tracking-wider">AAMU 2025</span>
-                        <div className="flex items-center gap-2">
-                            <span className="text-[10px] text-blue-200">{tourData.date}</span>
-                            <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                <div className="flex-1 overflow-y-auto pb-safe">
+                  {item.image && (
+                    <div className="w-full h-64 sm:h-80 relative shrink-0">
+                      <img src={item.image} alt={item.title} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/800x600/CBD5E1/475569?text=Image+Unavailable"; }}/>
+                      <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-black/30" />
+                      <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-white to-transparent pt-20">
+                        <div className="flex items-center gap-2 mb-2 text-blue-600 font-bold text-sm">
+                            <IconBuilding size={14} className="stroke-blue-600" />
+                            <span>{item.architect}</span>
                         </div>
+                        <h1 className="text-3xl sm:text-4xl font-sans font-bold text-slate-900 leading-tight mb-2 drop-shadow-sm">
+                          {item.title}
+                        </h1>
+                        <p className="text-slate-500 text-sm">{item.engTitle}</p>
+                      </div>
                     </div>
+                  )}
 
-                    <div className="flex-1 overflow-y-auto scrollbar-hide bg-slate-50">
-                        {activeTab === 'itinerary' && <ItineraryView />}
-                        {activeTab === 'member' && <MemberView />}
-                        {activeTab === 'info' && <InfoView />}
+                  <div className="px-6 sm:px-8 py-6 max-w-2xl mx-auto">
+                     {/* Case Talker Badge */}
+                     {item.caseTalker && (
+                       <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-start gap-3 shadow-sm">
+                         <div className="bg-white p-2.5 rounded-full text-slate-700 shadow-sm">
+                            <IconUsers size={20} className="" />
+                         </div>
+                         <div>
+                           <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Case Talker</p>
+                           <p className="text-slate-800 font-bold text-base">{item.caseTalker} <span className="text-sm font-normal text-slate-500">건축사</span></p>
+                         </div>
+                       </div>
+                     )}
+
+                     {/* Content Toggle */}
+                     {(item.summary || item.pdfContent) && (
+                       <div className="flex p-1 bg-slate-100 rounded-lg mb-8">
+                         <button 
+                           onClick={() => setViewMode('summary')}
+                           className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-md text-sm font-bold transition-all ${viewMode === 'summary' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400'}`}
+                         >
+                           <IconStar size={16} className="" /> 요약 (Summary)
+                         </button>
+                         <button 
+                           onClick={() => setViewMode('pdf')}
+                           className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-md text-sm font-bold transition-all ${viewMode === 'pdf' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400'}`}
+                         >
+                           <IconBookOpen size={16} className="" /> 가이드북 원문 (Guidebook)
+                         </button>
+                       </div>
+                     )}
+
+                     {/* Content Body */}
+                     <div className="animate-fade-in">
+                       {viewMode === 'summary' ? (
+                         // Summary View
+                         <div className="space-y-6">
+                            {item.summary ? item.summary.split('\n').map((paragraph, idx) => {
+                              if (paragraph.trim().startsWith('[') && paragraph.trim().endsWith(']')) {
+                                return (
+                                  <h3 key={idx} className="text-lg font-bold text-blue-900 mt-8 mb-3 font-sans border-l-4 border-blue-500 pl-3">
+                                    {paragraph.replace(/[\[\]]/g, '')}
+                                  </h3>
+                                );
+                              }
+                              if (paragraph.trim() === "") return <br key={idx} />;
+                              return (
+                                <p key={idx} className="text-slate-700 text-base leading-relaxed font-medium">
+                                  {paragraph}
+                                </p>
+                              );
+                            }) : (
+                              <div className="p-8 text-center text-slate-400 bg-slate-50 rounded-xl">
+                                <IconFileText size={32} className="mx-auto mb-2 opacity-20"/>
+                                <p>요약 내용이 없습니다.</p>
+                              </div>
+                            )}
+                         </div>
+                       ) : (
+                         // PDF Original View (Text Extracted)
+                         <div className="bg-white">
+                           <div className="mb-6 p-4 bg-amber-50 text-amber-800 text-xs rounded-lg flex gap-2 items-start">
+                              <IconInfo size={14} className="shrink-0 mt-0.5"/>
+                              <p>가이드북 PDF에서 추출한 원문 텍스트입니다. 여러 페이지의 내용을 합쳤습니다.</p>
+                           </div>
+                           
+                           {item.pdfContent ? item.pdfContent.split('\n').map((paragraph, idx) => {
+                              if (paragraph.trim().startsWith('[') && paragraph.trim().endsWith(']')) {
+                                return (
+                                  <h3 key={idx} className="text-xl font-bold text-slate-900 mt-10 mb-4 font-sans border-b pb-2 border-slate-200">
+                                    {paragraph.replace(/[\[\]]/g, '')}
+                                  </h3>
+                                );
+                              }
+                              if (paragraph.trim() === "") return <br key={idx} />;
+                              return (
+                                <p key={idx} className="text-slate-600 text-lg leading-8 mb-4 font-sans text-justify">
+                                  {paragraph}
+                                </p>
+                              );
+                           }) : (
+                              <div className="p-12 text-center text-slate-400">
+                                <IconBookOpen size={48} className="mx-auto mb-4 opacity-20" />
+                                <p>해당 건축물의 가이드북 원문이 없습니다.</p>
+                              </div>
+                           )}
+                           
+                           <div className="mt-12 pt-12 border-t border-slate-200 text-center pb-8">
+                              <p className="text-slate-300 text-sm italic font-sans">End of Guidebook Text</p>
+                           </div>
+                         </div>
+                       )}
+                     </div>
+
+                  </div>
+                </div>
+              </div>
+            );
+          };
+
+          // --- Views ---
+
+          const ItineraryView = () => (
+            <div className="pb-28 animate-fade-in">
+              <div className="px-6 py-8 bg-white sticky top-0 z-30 shadow-sm border-b border-slate-100">
+                <div className="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 className="text-2xl font-sans font-bold text-slate-900 tracking-tight">{currentDayData.title}</h2>
+                        <p className="text-slate-500 text-sm font-medium mt-1">{currentDayData.date} <span className="mx-1">|</span> {currentDayData.area}</p>
                     </div>
-
-                    <div className="bg-white/90 backdrop-blur-md border-t border-slate-200 flex justify-around pb-safe pt-2 px-2 shrink-0 z-20 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
-                        <button 
-                            onClick={() => setActiveTab('itinerary')}
-                            className={`flex flex-col items-center justify-center w-full py-3 space-y-1 ${activeTab === 'itinerary' ? 'text-blue-900' : 'text-slate-300 hover:text-slate-400'}`}
-                        >
-                            <IconCalendar size={22} strokeWidth={activeTab === 'itinerary' ? 2.5 : 2} />
-                            <span className="text-[10px] font-bold">일정</span>
-                        </button>
-                        <button 
-                            onClick={() => setActiveTab('member')}
-                            className={`flex flex-col items-center justify-center w-full py-3 space-y-1 ${activeTab === 'member' ? 'text-blue-900' : 'text-slate-300 hover:text-slate-400'}`}
-                        >
-                            <IconUserCheck size={22} strokeWidth={activeTab === 'member' ? 2.5 : 2} />
-                            <span className="text-[10px] font-bold">참석자</span>
-                        </button>
-                        <button 
-                            onClick={() => setActiveTab('info')}
-                            className={`flex flex-col items-center justify-center w-full py-3 space-y-1 ${activeTab === 'info' ? 'text-blue-900' : 'text-slate-300 hover:text-slate-400'}`}
-                        >
-                            <IconInfo size={22} strokeWidth={activeTab === 'info' ? 2.5 : 2} />
-                            <span className="text-[10px] font-bold">정보</span>
-                        </button>
+                    <div className="text-right">
+                        <span className="text-xs text-blue-600 font-bold bg-blue-50 px-2 py-1 rounded">{currentDayData.theme}</span>
                     </div>
                 </div>
-            );
+                
+                <div className="flex bg-slate-100 p-1 rounded-lg overflow-x-auto scrollbar-hide">
+                    {tourData.days.map((day) => (
+                    <button
+                        key={day.id}
+                        onClick={() => { setSelectedDay(day.id); setExpandedIndex(null); }}
+                        className={`flex-1 min-w-[70px] py-2 rounded-md text-xs font-bold transition-all duration-300 whitespace-nowrap ${
+                        selectedDay === day.id 
+                            ? 'bg-white text-blue-900 shadow-sm' 
+                            : 'text-slate-400 hover:text-slate-600'
+                        }`}
+                    >
+                        {day.title}
+                    </button>
+                    ))}
+                </div>
+              </div>
+
+              <div className="px-6 py-6 space-y-4">
+                {currentDayData.items.map((item, idx) => {
+                    const isExpanded = expandedIndex === idx;
+                    const hasDetails = !!item.details;
+
+                    return (
+                    <div 
+                        key={idx} 
+                        className={`relative group transition-all duration-500 ease-in-out ${
+                            isExpanded ? 'my-6' : 'my-0'
+                        }`}
+                    >
+                        {/* 타임라인 세로선 수정: 상단바와 겹치지 않도록 조정 */}
+                        <div className={`absolute left-[19px] top-4 bottom-[-20px] w-[1px] bg-slate-200 ${idx === currentDayData.items.length - 1 ? 'hidden' : ''}`} />
+
+                        <div className="flex gap-4 items-start">
+                            <div className="flex flex-col items-center shrink-0 w-10">
+                                {/* 타임라인 원형 마커 수정: z-index 제거 및 relative 유지 */}
+                                <div className={`w-3 h-3 rounded-full border-2 z-10 mt-2 transition-colors duration-300 ${
+                                    isExpanded ? 'bg-blue-600 border-blue-600 scale-125' : 
+                                    hasDetails ? 'bg-white border-slate-400 group-hover:border-slate-600' : 'bg-slate-200 border-slate-200'
+                                }`} />
+                                <span className={`text-[10px] font-mono mt-2 font-medium ${isExpanded ? 'text-blue-600' : 'text-slate-400'}`}>
+                                    {item.time}
+                                </span>
+                            </div>
+
+                            <div 
+                                onClick={() => hasDetails && toggleExpand(idx)}
+                                className={`flex-1 bg-white border rounded-xl transition-all duration-300 overflow-hidden ${
+                                    isExpanded 
+                                        ? 'border-blue-100 shadow-xl ring-1 ring-blue-50' 
+                                        : 'border-slate-100 shadow-sm hover:border-slate-300 active:scale-[0.99]'
+                                } ${hasDetails ? 'cursor-pointer' : ''}`}
+                            >
+                                <div className="p-4">
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <div className="flex flex-wrap items-center gap-2 mb-1">
+                                                <span className={`text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ${
+                                                    item.type === 'visit' ? 'bg-slate-100 text-slate-600' : 
+                                                    item.type === 'food' ? 'bg-amber-50 text-amber-600' : 
+                                                    'bg-slate-50 text-slate-500'
+                                                }`}>
+                                                    {item.type === 'visit' ? 'Architecture' : item.type === 'food' ? 'Meal' : item.type === 'view' ? 'View' : 'Logistics'}
+                                                </span>
+                                                {item.architect && <span className="text-[10px] text-blue-600 font-bold flex items-center gap-1"><IconStar size={8} className="fill-current"/> {item.architect}</span>}
+                                            </div>
+                                            <h3 className={`text-lg font-bold leading-tight transition-colors ${isExpanded ? 'text-blue-900' : 'text-slate-800'}`}>
+                                                {item.title}
+                                            </h3>
+                                            {item.engTitle && <p className="text-xs text-slate-400 font-sans mt-0.5">{item.engTitle}</p>}
+                                            
+                                            {!isExpanded && (
+                                                <div className="mt-2">
+                                                  <p className="text-slate-500 text-sm line-clamp-1">{item.desc || item.details}</p>
+                                                  {item.caseTalker && (
+                                                    <p className="text-xs text-blue-500 font-medium mt-1 flex items-center gap-1">
+                                                      <IconUsers size={10} className="" /> Case Talker: {item.caseTalker}
+                                                    </p>
+                                                  )}
+                                                </div>
+                                            )}
+                                        </div>
+                                        {hasDetails && (
+                                            <div className={`transition-transform duration-300 text-slate-300 ${isExpanded ? 'rotate-180 text-blue-400' : ''}`}>
+                                                <IconChevronDown size={20} />
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div 
+                                    className={`transition-all duration-500 ease-in-out overflow-hidden ${
+                                        isExpanded ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'
+                                    }`}
+                                >
+                                    {item.image && (
+                                        <div className="w-full h-48 bg-slate-200 relative">
+                                            <img src={item.image} alt={item.title} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/800x600/CBD5E1/475569?text=Image+Unavailable"; }}/>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                                        </div>
+                                    )}
+                                    <div className="p-5 bg-slate-50/50">
+                                        {item.caseTalker && (
+                                          <div className="mb-4 inline-flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-blue-100 shadow-sm">
+                                             <IconUsers size={14} className="text-blue-600"/>
+                                             <span className="text-xs font-bold text-blue-800">Case Talker: {item.caseTalker}</span>
+                                          </div>
+                                        )}
+                                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Summary</h4>
+                                        <p className="text-slate-700 text-sm leading-relaxed whitespace-pre-line font-medium mb-6">
+                                            {item.details}
+                                        </p>
+                                        
+                                        <button 
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setArticleView(item);
+                                            }}
+                                            className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform hover:bg-blue-700"
+                                        >
+                                            <IconBookOpen size={18} />
+                                            상세 해설 (Deep Dive)
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    );
+                })}
+              </div>
+            </div>
+          );
+
+          const MemberView = () => (
+            <div className="pb-24 animate-fade-in">
+                <div className="px-6 py-10 bg-blue-900 text-white sticky top-0 z-10">
+                    <h1 className="text-2xl font-sans font-bold mb-2">Participants</h1>
+                    <p className="text-blue-200 text-sm">AAMU 건축사 20인 명단</p>
+                </div>
+                <div className="p-6 grid gap-4">
+                    {tourData.participants.map((person) => (
+                        <div key={person.id} className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0">
+                            <div className="flex items-center gap-3">
+                                <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-700 font-bold text-lg shrink-0">
+                                    {person.name[0]}
+                                </div>
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-2">
+                                      <p className="font-bold text-slate-800 text-lg">{person.name} <span className="text-slate-400 text-xs font-normal">건축사</span></p>
+                                      <span className="px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] rounded-md font-bold flex items-center gap-1">
+                                        <IconGraduationCap size={10} className="" /> {person.studentId}학번
+                                      </span>
+                                    </div>
+                                    <p className="text-xs text-slate-500 font-medium mt-0.5">{person.firm}</p>
+                                </div>
+                            </div>
+                            <a href={`tel:${person.phone}`} className="flex items-center justify-center gap-2 w-full sm:w-auto bg-slate-50 sm:bg-transparent py-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition border border-slate-100 sm:border-0">
+                                <IconPhone size={18} className="" />
+                                <span className="text-xs font-bold sm:hidden">{person.phone}</span>
+                            </a>
+                        </div>
+                    ))}
+                </div>
+            </div>
+          );
+
+          const InfoView = () => (
+            <div className="pb-24 animate-fade-in">
+              <div className="px-6 py-10 bg-blue-900 text-white sticky top-0 z-10">
+                <h1 className="text-2xl font-sans font-bold mb-2">Logistics</h1>
+                <p className="text-blue-200 text-sm">운영 및 비상 연락망</p>
+              </div>
+              
+              <div className="p-6 -mt-6 space-y-4">
+                <div className="bg-white p-5 rounded-xl shadow-lg border border-slate-100 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
+                            <IconUsers size={20} className="" />
+                        </div>
+                        <div>
+                            <p className="text-xs text-slate-400 font-bold uppercase">Agency</p>
+                            <p className="text-slate-800 font-bold">{tourData.logistics.agency}</p>
+                        </div>
+                    </div>
+                    <button className="bg-blue-600 text-white p-2.5 rounded-full hover:bg-blue-700 transition shadow-md">
+                        <IconPhone size={18} className="stroke-white" />
+                    </button>
+                </div>
+
+                <div className="bg-white p-6 rounded-xl shadow-md border border-slate-100 space-y-6">
+                    <div className="flex gap-4 items-start">
+                        <div className="mt-1 text-slate-300"><IconBuilding size={20} className="" /></div>
+                        <div>
+                            <p className="text-xs text-slate-400 font-bold uppercase mb-1">Accommodation</p>
+                            <p className="text-slate-800 font-bold text-lg leading-tight">{tourData.logistics.hotel}</p>
+                        </div>
+                    </div>
+                    <div className="w-full h-[1px] bg-slate-100" />
+                    <div className="flex gap-4 items-start">
+                        <div className="mt-1 text-slate-300"><IconNavigation size={20} className="" /></div>
+                        <div>
+                            <p className="text-xs text-slate-400 font-bold uppercase mb-1">Transport</p>
+                            <p className="text-slate-800 font-bold">{tourData.logistics.bus}</p>
+                        </div>
+                    </div>
+                     <div className="w-full h-[1px] bg-slate-100" />
+                    <div className="flex gap-4 items-start">
+                        <div className="mt-1 text-slate-300"><IconPhone size={20} className="" /></div>
+                        <div>
+                            <p className="text-xs text-slate-400 font-bold uppercase mb-1">Emergency</p>
+                            <p className="text-slate-800 font-bold">{tourData.logistics.contact}</p>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          );
+
+          return (
+            <div className="bg-slate-50 h-screen w-full max-w-md mx-auto overflow-hidden flex flex-col font-sans relative shadow-2xl border-x border-slate-200">
+              {articleView && <ArticleModal item={articleView} onClose={() => setArticleView(null)} />}
+
+              <div className="bg-blue-900 text-white px-6 py-4 shrink-0 flex justify-between items-center z-40 shadow-md">
+                <span className="font-bold text-sm tracking-wider font-sans">AAMU 2025</span>
+                <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-blue-200">{tourData.date}</span>
+                    <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                </div>
+              </div>
+
+              <div className="flex-1 overflow-y-auto scrollbar-hide bg-slate-50">
+                {activeTab === 'itinerary' && <ItineraryView />}
+                {activeTab === 'member' && <MemberView />}
+                {activeTab === 'info' && <InfoView />}
+              </div>
+
+              <div className="bg-white/90 backdrop-blur-md border-t border-slate-200 flex justify-around pb-safe pt-2 px-2 shrink-0 z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
+                <button 
+                  onClick={() => setActiveTab('itinerary')}
+                  className={`flex flex-col items-center justify-center w-full py-3 space-y-1 ${activeTab === 'itinerary' ? 'text-blue-900' : 'text-slate-300 hover:text-slate-400'}`}
+                >
+                  <IconCalendar size={22} strokeWidth={activeTab === 'itinerary' ? 2.5 : 2} />
+                  <span className="text-[10px] font-bold">일정</span>
+                </button>
+                <button 
+                  onClick={() => setActiveTab('member')}
+                  className={`flex flex-col items-center justify-center w-full py-3 space-y-1 ${activeTab === 'member' ? 'text-blue-900' : 'text-slate-300 hover:text-slate-400'}`}
+                >
+                  <IconUserCheck size={22} strokeWidth={activeTab === 'member' ? 2.5 : 2} />
+                  <span className="text-[10px] font-bold">참석자</span>
+                </button>
+                <button 
+                  onClick={() => setActiveTab('info')}
+                  className={`flex flex-col items-center justify-center w-full py-3 space-y-1 ${activeTab === 'info' ? 'text-blue-900' : 'text-slate-300 hover:text-slate-400'}`}
+                >
+                  <IconInfo size={22} strokeWidth={activeTab === 'info' ? 2.5 : 2} />
+                  <span className="text-[10px] font-bold">정보</span>
+                </button>
+              </div>
+            </div>
+          );
         };
 
         // React 앱을 root div에 렌더링
